@@ -4,8 +4,8 @@ import cn.edu.guet.WeShop.bean.IncomingOrderbase;
 import cn.edu.guet.WeShop.bean.IncomingOrderdetail;
 import cn.edu.guet.WeShop.bean.Item;
 import cn.edu.guet.WeShop.bean.Item_stock;
-import cn.edu.guet.WeShop.service.ReplenishStockService;
-import cn.edu.guet.WeShop.service.impl.ReplenishStockServiceImpl;
+import cn.edu.guet.WeShop.service.IncomingOrderService;
+import cn.edu.guet.WeShop.service.impl.IncomingOrderServiceImpl;
 
 import java.util.UUID;
 
@@ -70,7 +70,7 @@ public class ReplenishManager {
         item_stock.setItem_id(item_id);
 
 
-        ReplenishStockService replenishStockService = new ReplenishStockServiceImpl();
+        IncomingOrderService replenishStockService = new IncomingOrderServiceImpl();
         if (flag){
             Item item = new Item();
             item.setTitle(title);
