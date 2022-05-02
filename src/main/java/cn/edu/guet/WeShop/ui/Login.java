@@ -77,10 +77,14 @@ public class Login extends JFrame {
                             if ("采购员".equals(rs.getString(4))){
                                 BuyerInterface buyerInterface = new BuyerInterface(rs.getString(1));
                                 buyerInterface.setVisible(true);
+                            }else if("老板".equals(rs.getString(4))){
+                                OrderList orderList=new OrderList();
+                                orderList.setVisible(true);
                             }else{
                                 SellMain sellMain =new SellMain();
                                 sellMain.setVisible(true);
                             }
+
                         } else {
                             System.out.println("用户名或密码错误");
                         }
