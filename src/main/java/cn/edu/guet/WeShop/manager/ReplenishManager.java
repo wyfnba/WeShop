@@ -22,19 +22,17 @@ public class ReplenishManager {
     double stock;
     List<String> title = new ArrayList<>();
 
-    public ReplenishManager(boolean flag,double stock){
+    public ReplenishManager(boolean flag){
         this.flag = flag;
-        this.stock = stock;
     }
 
-    public ReplenishManager(boolean flag, double stock, List<String> title){
+    public ReplenishManager(boolean flag,List<String> title){
         this.title = title;
         this.flag = flag;
-        this.stock = stock;
     }
 
 
-    public void PackagingClass(double money, String user_id, List<String> item_id, List<Double> amount){
+    public void PackagingClass(double money, String user_id, List<String> item_id, List<Double> amount,List<Double> stock){
         /*
                 Order order = new Order();
                 String id = UUID.randomUUID().toString().replace("-", "");
@@ -64,30 +62,29 @@ public class ReplenishManager {
         List<IncomingOrderdetail> incomingOrderDetail = new ArrayList<>();
         List<Item_stock> item_stocks = new ArrayList<>();
 
-        for (int i = 0 ; i < item_id.size() ; i++){
+        for (int i = 0 ; i < amount.size() ; i++){
             IncomingOrderdetail incomingOrderdetail = new IncomingOrderdetail();
             incomingOrderdetail.setIncoming_orderbase_id(id);
             incomingOrderdetail.setItem_id(item_id.get(i));
             incomingOrderdetail.setAmount(amount.get(i));
 
-
             Item_stock item_stock = new Item_stock();
-            item_stock.setStock(stock);
+            item_stock.setStock(stock.get(i));
             item_stock.setItem_id(item_id.get(i));
 
             incomingOrderDetail.add(incomingOrderdetail);
             item_stocks.add(item_stock);
         }
 
-
         IncomingOrderService replenishStockService = new IncomingOrderServiceImpl();
         List<Item> items = new ArrayList<>();
         if (flag){
-            for (String s : title) {
+            for (int i = 0 ; i < title.size() ; i++) {
                 Item item = new Item();
-                item.setTitle(s);
+                item.setTitle(title.get(i));
                 item.setPrice(price);
                 item.setSales(0);
+                item.setId(item_id.get(i));
 
                 items.add(item);
             }

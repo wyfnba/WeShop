@@ -7,6 +7,7 @@ import cn.edu.guet.WeShop.util.ConnectionHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @Author Pangjiaen
@@ -14,17 +15,23 @@ import java.sql.SQLException;
  */
 public class ItemStockImpl implements ItemStockDao {
     @Override
-    public void increaseItemStock(Item_stock item_stock) throws SQLException {
+    public void increaseItemStock(List<Item_stock> item_stock) throws SQLException {
         Connection conn = null;
         try {
             conn = ConnectionHandler.getConn();
-            String sql = "UPDATE item_stock SET stock = ? WHERE item_id = ?";
+
+            String sql = "UPDATE item_stock SET stock = stock+? WHERE item_id = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDouble(1,item_stock.getStock());
-            pstmt.setString(2,item_stock.getItem_id());
+            for (int i = 0 ; i < item_stock.size() ; i++){
 
-            pstmt.executeUpdate();
+                pstmt.setDouble(1,item_stock.get(i).getStock());
+                pstmt.setString(2,item_stock.get(i).getItem_id());
+                System.out.println("itemstock:"+item_stock.get(i).getItem_id());
+
+                pstmt.executeUpdate();
+            }
+
 
         } catch (SQLException e) {
             e.printStackTrace();

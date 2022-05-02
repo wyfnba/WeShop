@@ -17,6 +17,7 @@ import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @Author Pangjiaen
@@ -25,7 +26,7 @@ import java.sql.SQLException;
 public class IncomingOrderServiceImpl implements IncomingOrderService {
     Connection conn = null;
     @Override
-    public void newIncomingOrderCaseOne(IncomingOrderdetail incomingOrderdetail, IncomingOrderbase incomingOrderbase, Item_stock item_stock) {
+    public void newIncomingOrderCaseOne(List<IncomingOrderdetail> incomingOrderDetail, IncomingOrderbase incomingOrderbase, List<Item_stock> item_stocks) {
 
 
         try {
@@ -38,8 +39,9 @@ public class IncomingOrderServiceImpl implements IncomingOrderService {
             conn.setAutoCommit(false);
 
             replenishStockBaseDao.addOrderBase(incomingOrderbase);
-            replenishStockDetailDao.addOrderDetail(incomingOrderdetail);
-            increaseItemStockDao.increaseItemStock(item_stock);
+
+            replenishStockDetailDao.addOrderDetail(incomingOrderDetail);
+            increaseItemStockDao.increaseItemStock(item_stocks);
 
             conn.commit();
         } catch (SQLException e) {
@@ -60,7 +62,7 @@ public class IncomingOrderServiceImpl implements IncomingOrderService {
     }
 
     @Override
-    public void newIncomingOrderCaseTwo(IncomingOrderdetail incomingOrderdetail, IncomingOrderbase incomingOrderbase, Item_stock item_stock, Item item) {
+    public void newIncomingOrderCaseTwo(List<IncomingOrderdetail> incomingOrderDetail, IncomingOrderbase incomingOrderbase, List<Item_stock> item_stocks, List<Item> items) {
 
         try {
             IncomingOrderBaseDao replenishStockBaseDao = new IncomingOrderBaseImpl();
@@ -72,10 +74,10 @@ public class IncomingOrderServiceImpl implements IncomingOrderService {
 
             conn.setAutoCommit(false);
 
-            addItemDao.AddItem(item);
+            addItemDao.AddItem(items);
             replenishStockBaseDao.addOrderBase(incomingOrderbase);
-            replenishStockDetailDao.addOrderDetail(incomingOrderdetail);
-            increaseItemStockDao.increaseItemStock(item_stock);
+            replenishStockDetailDao.addOrderDetail(incomingOrderDetail);
+            increaseItemStockDao.increaseItemStock(item_stocks);
 
 
             conn.commit();
