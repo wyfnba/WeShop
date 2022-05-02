@@ -21,6 +21,7 @@ public class ReplenishManager {
     double price = 0;
     double stock;
     List<String> title = new ArrayList<>();
+    
 
     public ReplenishManager(boolean flag,double stock){
         this.flag = flag;
