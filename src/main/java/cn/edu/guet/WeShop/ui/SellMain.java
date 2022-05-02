@@ -19,8 +19,8 @@ public class SellMain extends JFrame {
     }
 
     private void initComponents() {
-        java.util.List<Item> listc = new ArrayList<Item>();
-        java.util.List<String> amount = new ArrayList<>();
+        java.util.List<Item> listc = new ArrayList<Item>();//将要传给购物车的商品列表
+        java.util.List<String> amount = new ArrayList<>();//将要传给购物车的商品数量列表
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
         button1 = new JButton();
@@ -70,8 +70,8 @@ public class SellMain extends JFrame {
         button2.addActionListener(
                 (e) -> {
                     int rowNo = table1.getSelectedRow();//获取所选的行号
-                    amount.add(textField2.getText());
-                    listc.add(list.get(rowNo));
+                    amount.add(textField2.getText());//将所选商品输入的数量放入数量列表
+                    listc.add(list.get(rowNo));//将所选商品信息放入购物车列表
                 }
         );
 

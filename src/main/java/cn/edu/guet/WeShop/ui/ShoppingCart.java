@@ -1,6 +1,7 @@
 package cn.edu.guet.WeShop.ui;
 
 import cn.edu.guet.WeShop.bean.Item;
+import cn.edu.guet.WeShop.pay.WXPay;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,9 +14,10 @@ import java.awt.*;
 public class ShoppingCart extends JFrame {
     java.util.List<Item> list;
     java.util.List<String> amount;
-    public ShoppingCart(java.util.List<Item> list,java.util.List<String> amount) {
-        this.list=list;
-        this.amount=amount;
+
+    public ShoppingCart(java.util.List<Item> list, java.util.List<String> amount) {
+        this.list = list;
+        this.amount = amount;
         initComponents();
     }
 
@@ -28,6 +30,7 @@ public class ShoppingCart extends JFrame {
         button4 = new JButton();
         label1 = new JLabel();
         textField1 = new JTextField();
+        textField2 = new JTextField();
 
         DefaultTableModel tableModel = new DefaultTableModel(getDataFromDatabase(), head) {
             public boolean isCellEditable(int row, int column) {
@@ -47,15 +50,34 @@ public class ShoppingCart extends JFrame {
         contentPane.add(label1);
         label1.setBounds(460, 0, 600, 60);
 
-        /*
-        button1.setText("删除");
-        contentPane.add(button1);
-        button1.setBounds(510, 355, 100, 30);
-         */
 
-        button2.setText("提交");
+        contentPane.add(textField2);
+        textField2.setBounds(830, 355, 130, 30);
+
+        button1.setText("扫码支付");
+        contentPane.add(button1);
+        button1.setBounds(720, 355, 100, 30);
+        button1.addActionListener(
+                e -> {
+                    try {
+                        WXPay.scanCodeToPay(textField2.getText());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+        );
+
+
+        button2.setText("二维码支付");
         contentPane.add(button2);
         button2.setBounds(610, 355, 100, 30);
+        button2.addActionListener(
+                e -> {
+                    ///WXPay.unifiedOrder();
+                    Pay pay = new Pay();
+                    pay.setVisible(true);
+                }
+        );
 
         contentPane.add(textField1);
         textField1.setBounds(270, 355, 130, 30);
@@ -115,5 +137,6 @@ public class ShoppingCart extends JFrame {
     private JButton button3;
     private JButton button4;
     private JTextField textField1;
+    private JTextField textField2;
     private JLabel label1;
 }

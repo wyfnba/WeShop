@@ -1,4 +1,4 @@
-package cn.edu.guet.WeShop.util;
+package cn.edu.guet.WeShop.sdk;
 
 import org.w3c.dom.Document;
 
