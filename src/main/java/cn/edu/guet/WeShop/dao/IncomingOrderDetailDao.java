@@ -13,6 +13,6 @@ import java.sql.SQLException;
 /**
  * 这是进货时对细节表的更新接口
  */
-public interface ReplenishStockDetailDao {
+public interface IncomingOrderDetailDao {
     void addOrderDetail(IncomingOrderdetail incomingOrderdetail) throws SQLException;
 }

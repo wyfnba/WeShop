@@ -12,6 +12,6 @@ import java.sql.SQLException;
 /**
  * 进货时增加库存
  */
-public interface IncreaseItemStockDao {
+public interface ItemStockDao {
     void increaseItemStock(Item_stock item_stock) throws SQLException;
 }

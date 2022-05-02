@@ -1,11 +1,10 @@
 package cn.edu.guet.WeShop.dao.impl;
 
 import cn.edu.guet.WeShop.bean.Item_stock;
-import cn.edu.guet.WeShop.dao.IncreaseItemStockDao;
+import cn.edu.guet.WeShop.dao.ItemStockDao;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -13,7 +12,7 @@ import java.sql.SQLException;
  * @Author Pangjiaen
  * @Date 2022/5/1 21:05:26
  */
-public class IncreaseItemImpl implements IncreaseItemStockDao {
+public class ItemStockImpl implements ItemStockDao {
     @Override
     public void increaseItemStock(Item_stock item_stock) throws SQLException {
         Connection conn = null;

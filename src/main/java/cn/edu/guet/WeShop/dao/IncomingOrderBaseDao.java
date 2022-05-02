@@ -13,6 +13,6 @@ import java.sql.SQLException;
 /**
  * 这是进货时对基础表的更新接口
  */
-public interface ReplenishStockBaseDao {
+public interface IncomingOrderBaseDao {
     void addOrderBase(IncomingOrderbase incomingOrderbase) throws SQLException;
 }
