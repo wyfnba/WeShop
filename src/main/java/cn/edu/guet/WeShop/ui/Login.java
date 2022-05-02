@@ -19,9 +19,9 @@ public class Login extends JFrame {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         label1 = new JLabel();
-        textField1 = new JTextField("wyf");
+        textField1 = new JTextField("pje");
         label2 = new JLabel();
-        textField2 = new JTextField("wyfnb");
+        textField2 = new JTextField("pje");
         button1 = new JButton();
 
         //======== this ========
@@ -74,9 +74,13 @@ public class Login extends JFrame {
                         if (rs.next()) {//让游标向下移动一次
                             System.out.println("登录成功");
                             this.setVisible(false);
-
-                            SellMain sellMain =new SellMain();
-                            sellMain.setVisible(true);
+                            if ("采购员".equals(rs.getString(4))){
+                                BuyerInterface buyerInterface = new BuyerInterface(rs.getString(1));
+                                buyerInterface.setVisible(true);
+                            }else{
+                                SellMain sellMain =new SellMain();
+                                sellMain.setVisible(true);
+                            }
                         } else {
                             System.out.println("用户名或密码错误");
                         }
