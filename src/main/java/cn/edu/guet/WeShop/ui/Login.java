@@ -19,9 +19,9 @@ public class Login extends JFrame {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         label1 = new JLabel();
-        textField1 = new JTextField("pje");
+        textField1 = new JTextField("陶泽康");
         label2 = new JLabel();
-        textField2 = new JTextField("pje");
+        textField2 = new JTextField("tzk");
         button1 = new JButton();
 
         //======== this ========

@@ -26,6 +26,7 @@ public class AddUser extends JFrame {
         label4 = new JLabel();
         textField4 = new JTextField();
         button1 = new JButton();
+        button2 =new JButton();
 
         //======== this ========
         JPanel contentPane = (JPanel) getContentPane();
@@ -72,6 +73,17 @@ public class AddUser extends JFrame {
                 }
         );
 
+        button2.setText("返回");
+        contentPane.add(button2);
+        button2.setBounds(350, 300, 100, 30);
+        button2.addActionListener(
+                (e)->{
+                    this.setVisible(false);
+                    UserControl userControl=new UserControl();
+                    userControl.setVisible(true);
+                }
+        );
+
         {
             // compute preferred size
             Dimension preferredSize = new Dimension();
@@ -105,4 +117,5 @@ public class AddUser extends JFrame {
     private JLabel label6;
     private JTextField textField6;
     private JButton button1;
+    private JButton button2;
 }

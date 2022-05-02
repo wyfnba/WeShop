@@ -1,8 +1,7 @@
 package cn.edu.guet.WeShop.ui;
 
+import cn.edu.guet.WeShop.bean.IncomingOrderbase;
 import cn.edu.guet.WeShop.bean.ReturnOrderbase;
-import cn.edu.guet.WeShop.bean.User;
-import cn.edu.guet.WeShop.service.impl.UserServiceImpl;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import javax.swing.*;
@@ -18,9 +17,11 @@ import java.util.ArrayList;
 /**
  * @liwei
  */
-public class UserControl extends JFrame {
-    java.util.List<User> list = new ArrayList<User>();
-    public UserControl() {
+public class Incoming_Search extends JFrame {
+    java.util.List<IncomingOrderbase> list = new ArrayList<IncomingOrderbase>();
+    String username;
+    public Incoming_Search(String username) {
+        this.username=username;
         initComponents();
     }
 
@@ -30,7 +31,6 @@ public class UserControl extends JFrame {
         button1 = new JButton();
         button2 = new JButton();
         button3 = new JButton();
-        button4 =new JButton();
         label1 = new JLabel();
         label2 = new JLabel();
         textField1 = new JTextField();
@@ -47,59 +47,18 @@ public class UserControl extends JFrame {
         contentPane.setLayout(null);
 
         label1.setFont(new Font("STHeiti Light", Font.BOLD, 30));
-        label1.setText("普通用户");
+        label1.setText("查询结果");
         contentPane.add(label1);
         label1.setBounds(460, 0, 600, 60);
 
-        label2.setText("用户姓名：");
-        contentPane.add(label2);
-        label2.setBounds(20, 355, 70, 30);
-
-        contentPane.add(textField1);//搜索框
-        textField1.setBounds(100, 355, 130, 30);
-
-        button1.setText("查询");
+        button1.setText("返回");
         contentPane.add(button1);
-        button1.setBounds(300, 355, 100, 30);
+        button1.setBounds(500,355,100,30);
         button1.addActionListener(
                 (e) -> {
-
-                }
-        );
-
-
-        button2.setText("新增");
-        contentPane.add(button2);
-        button2.setBounds(500,355,100,30);
-        button2.addActionListener(
-                (e)->{
                     this.setVisible(false);
-                    AddUser addUser=new AddUser();
-                    addUser.setVisible(true);
-                }
-        );
-
-        button3.setText("删除");
-        contentPane.add(button3);
-        button3.setBounds(600,355,100,30);
-        button3.addActionListener(
-                (e)->{
-                    int rowNo=table1.getSelectedRow();
-                    String userName=(String)table1.getValueAt(rowNo,2);
-
-                    UserServiceImpl userService=new UserServiceImpl();
-                    userService.deleteUser(userName);
-                }
-        );
-
-        button4.setText("返回");
-        contentPane.add(button4);
-        button4.setBounds(750,355,100,30);
-        button4.addActionListener(
-                (e)->{
-                    this.setVisible(false);
-                    OrderList orderList=new OrderList();
-                    orderList.setVisible(true);
+                    Sale_Stock sale_stock=new Sale_Stock();
+                    sale_stock.setVisible(true);
                 }
         );
 
@@ -131,19 +90,23 @@ public class UserControl extends JFrame {
 
         Connection conn = null;
         PreparedStatement ps=null;
-        String sql = "SELECT * FROM user";
+        String sql = "SELECT i.* \n" +
+                "FROM user u,incoming_orderbase i \n" +
+                "WHERE u.id=i.user_id && u.username=?\n" +
+                "GROUP BY i.id";
         ResultSet rs = null;
         try {
             conn= ConnectionHandler.getConn();
             ps = conn.prepareStatement(sql);
+            ps.setString(1,username);
             rs = ps.executeQuery(sql);
             while (rs.next()) {
-                User user=new User();
-                user.setId(rs.getString(1));
-                user.setUsername(rs.getString(2));
-                user.setPassword(rs.getString(3));
-                user.setStatus(rs.getString(4));
-                this.list.add(user);
+                IncomingOrderbase incomingOrderbase=new IncomingOrderbase();
+                incomingOrderbase.setId(rs.getString(1));
+                incomingOrderbase.setUser_id(rs.getString(2));
+                incomingOrderbase.setMoney(rs.getDouble(3));
+                incomingOrderbase.setTime(rs.getTimestamp(4));
+                this.list.add(incomingOrderbase);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -161,9 +124,9 @@ public class UserControl extends JFrame {
 
         for (int i = 0; i < this.list.size(); i++) {
             data[i][0] = this.list.get(i).getId();
-            data[i][1] = this.list.get(i).getUsername();
-            data[i][2] = this.list.get(i).getPassword();
-            data[i][3]=this.list.get(i).getStatus();
+            data[i][1] = this.list.get(i).getUser_id();
+            data[i][2] = this.list.get(i).getMoney();
+            data[i][3]=this.list.get(i).getTime();
         }
         return data;
     }
@@ -180,5 +143,4 @@ public class UserControl extends JFrame {
     private JTextField textField2;
     private JLabel label1;
     private JLabel label2;
-
 }

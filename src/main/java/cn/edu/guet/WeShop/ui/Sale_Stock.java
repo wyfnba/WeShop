@@ -103,7 +103,7 @@ public class Sale_Stock extends JFrame {
 
         Connection conn = null;
         ResultSet rs = null;
-        String sql = "SELECT * FROM return_orderbase";
+        String sql = "SELECT * FROM incoming_orderbase";
         PreparedStatement ps=null;
         try {
             conn= ConnectionHandler.getConn();
@@ -120,15 +120,14 @@ public class Sale_Stock extends JFrame {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             System.out.println(1);
-        } finally {
+        } /*finally {
             try {
                 ps.close();
                 conn.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-
-        }
+        }*/
         // 把集合的数据（商品信息）转换成二维数组
         data = new Object[this.list.size()][head.length];
 
@@ -143,7 +142,7 @@ public class Sale_Stock extends JFrame {
 
     private JScrollPane scrollPane1;
     private JTable table1;
-    private String head[] = {"商品id", "经手人id", "入账金额","交易时间"};
+    private String head[] = {"商品id", "经手人id", "出账金额","交易时间"};
     private Object[][] data = null;
     private JButton button1;
     private JButton button2;

@@ -130,7 +130,7 @@ public class OrderList extends JFrame {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        } finally {
+        } /*finally {
             try {
                 rs.close();
                 stmt.close();
@@ -138,8 +138,7 @@ public class OrderList extends JFrame {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-
-        }
+        }*/
         // 把集合的数据（商品信息）转换成二维数组
         data = new Object[this.list.size()][head.length];
 

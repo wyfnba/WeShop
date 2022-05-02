@@ -48,7 +48,7 @@ public class Sale_Return extends JFrame {
         contentPane.add(label1);
         label1.setBounds(460, 0, 600, 60);
 
-        label2.setText("经手人id：");
+        label2.setText("经手人姓名：");
         contentPane.add(label2);
         label2.setBounds(20, 355, 70, 30);
         contentPane.add(textField1);
@@ -59,7 +59,10 @@ public class Sale_Return extends JFrame {
         button1.setBounds(300, 355, 100, 30);
         button1.addActionListener(
                 (e) -> {
-
+                    this.setVisible(false);
+                    String textField1Text=textField1.getText();
+                    Return_Search search=new Return_Search(textField1Text);
+                    search.setVisible(true);
                 }
         );
 
@@ -119,7 +122,7 @@ public class Sale_Return extends JFrame {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        } finally {
+        } /*finally {
             try {
                 rs.close();
                 ps.close();
@@ -127,8 +130,7 @@ public class Sale_Return extends JFrame {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-
-        }
+        }*/
         // 把集合的数据（商品信息）转换成二维数组
         data = new Object[this.list.size()][head.length];
 
