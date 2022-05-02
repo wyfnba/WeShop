@@ -10,13 +10,13 @@ public class Orderbase {
     private Timestamp time_end;
     private String transaction_id;
     private String user_id;
-    private float order_price;
+    private double order_price;
 
     public Orderbase(){
 
     }
 
-    public Orderbase(String id, int mch_id, String out_trade_no, Timestamp time_end, String transaction_id, String user_id, float order_price) {
+    public Orderbase(String id, int mch_id, String out_trade_no, Timestamp time_end, String transaction_id, String user_id, double order_price) {
         this.id = id;
         this.mch_id = mch_id;
         this.out_trade_no = out_trade_no;
@@ -74,7 +74,7 @@ public class Orderbase {
         this.user_id = user_id;
     }
 
-    public float getOrder_price() {
+    public double getOrder_price() {
         return order_price;
     }
 
@@ -87,7 +87,7 @@ public class Orderbase {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Orderbase orderbase = (Orderbase) o;
-        return mch_id == orderbase.mch_id && Float.compare(orderbase.order_price, order_price) == 0 && Objects.equals(id, orderbase.id) && Objects.equals(out_trade_no, orderbase.out_trade_no) && Objects.equals(time_end, orderbase.time_end) && Objects.equals(transaction_id, orderbase.transaction_id) && Objects.equals(user_id, orderbase.user_id);
+        return mch_id == orderbase.mch_id && Double.compare(orderbase.order_price, order_price) == 0 && Objects.equals(id, orderbase.id) && Objects.equals(out_trade_no, orderbase.out_trade_no) && Objects.equals(time_end, orderbase.time_end) && Objects.equals(transaction_id, orderbase.transaction_id) && Objects.equals(user_id, orderbase.user_id);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class SellMain extends JFrame {
 
     private void initComponents() {
         java.util.List<Item> listc = new ArrayList<Item>();//将要传给购物车的商品列表
-        java.util.List<String> amount = new ArrayList<>();//将要传给购物车的商品数量列表
+        java.util.List<String> amount = new ArrayList<String>();//将要传给购物车的商品数量列表
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
         button1 = new JButton();
