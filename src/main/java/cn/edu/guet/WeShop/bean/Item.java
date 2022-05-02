@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Item {
     private String id;
     private String title;
-    private Float price;
+    private double price;
     private String description;
     private int sales;
 
@@ -36,11 +36,11 @@ public class Item {
         this.title = title;
     }
 
-    public Float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

@@ -1,5 +1,7 @@
 package cn.edu.guet.WeShop.controller;
 
+import cn.edu.guet.WeShop.bean.IncomingOrderbase;
+import cn.edu.guet.WeShop.bean.IncomingOrderdetail;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -105,6 +107,8 @@ public class TestController {
 
                 orderService.newOrder(order, item_id, item_amount);
                 */
+
+
 
                 /*
                 发信息给微信，告知微信官方，已收到通知
