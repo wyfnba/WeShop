@@ -4,9 +4,11 @@ import cn.edu.guet.WeShop.bean.IncomingOrderbase;
 import cn.edu.guet.WeShop.bean.IncomingOrderdetail;
 import cn.edu.guet.WeShop.bean.Item;
 import cn.edu.guet.WeShop.bean.Item_stock;
-import cn.edu.guet.WeShop.service.ReplenishStockService;
-import cn.edu.guet.WeShop.service.impl.ReplenishStockServiceImpl;
+import cn.edu.guet.WeShop.service.IncomingOrderService;
+import cn.edu.guet.WeShop.service.impl.IncomingOrderServiceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -16,24 +18,23 @@ import java.util.UUID;
  */
 public class ReplenishManager {
     boolean flag;
-    double price;
+    double price = 0;
     double stock;
-    String title;
+    List<String> title = new ArrayList<>();
 
     public ReplenishManager(boolean flag,double stock){
         this.flag = flag;
         this.stock = stock;
     }
 
-    public ReplenishManager(boolean flag,double stock,double price,String title){
+    public ReplenishManager(boolean flag, double stock, List<String> title){
         this.title = title;
         this.flag = flag;
-        this.price = price;
         this.stock = stock;
     }
 
 
-    public void PackagingClass(double money,String user_id,String item_id,double amount){
+    public void PackagingClass(double money, String user_id, List<String> item_id, List<Double> amount){
         /*
                 Order order = new Order();
                 String id = UUID.randomUUID().toString().replace("-", "");
@@ -60,25 +61,40 @@ public class ReplenishManager {
         incomingOrderbase.setUser_id(user_id);
         incomingOrderbase.setMoney(money);
 
-        IncomingOrderdetail incomingOrderdetail = new IncomingOrderdetail();
-        incomingOrderdetail.setIncoming_orderbase_id(id);
-        incomingOrderdetail.setItem_id(item_id);
-        incomingOrderdetail.setAmount(amount);
+        List<IncomingOrderdetail> incomingOrderDetail = new ArrayList<>();
+        List<Item_stock> item_stocks = new ArrayList<>();
 
-        Item_stock item_stock = new Item_stock();
-        item_stock.setStock(stock);
-        item_stock.setItem_id(item_id);
+        for (int i = 0 ; i < item_id.size() ; i++){
+            IncomingOrderdetail incomingOrderdetail = new IncomingOrderdetail();
+            incomingOrderdetail.setIncoming_orderbase_id(id);
+            incomingOrderdetail.setItem_id(item_id.get(i));
+            incomingOrderdetail.setAmount(amount.get(i));
 
 
-        ReplenishStockService replenishStockService = new ReplenishStockServiceImpl();
+            Item_stock item_stock = new Item_stock();
+            item_stock.setStock(stock);
+            item_stock.setItem_id(item_id.get(i));
+
+            incomingOrderDetail.add(incomingOrderdetail);
+            item_stocks.add(item_stock);
+        }
+
+
+        IncomingOrderService replenishStockService = new IncomingOrderServiceImpl();
+        List<Item> items = new ArrayList<>();
         if (flag){
-            Item item = new Item();
-            item.setTitle(title);
-            item.setPrice(price);
-            item.setSales(0);
-            replenishStockService.newIncomingOrderCaseTwo(incomingOrderdetail,incomingOrderbase,item_stock,item);
+            for (String s : title) {
+                Item item = new Item();
+                item.setTitle(s);
+                item.setPrice(price);
+                item.setSales(0);
+
+                items.add(item);
+            }
+
+            replenishStockService.newIncomingOrderCaseTwo(incomingOrderDetail,incomingOrderbase,item_stocks,items);
         }else{
-            replenishStockService.newIncomingOrderCaseOne(incomingOrderdetail,incomingOrderbase,item_stock);
+            replenishStockService.newIncomingOrderCaseOne(incomingOrderDetail,incomingOrderbase,item_stocks);
         }
 
     }
