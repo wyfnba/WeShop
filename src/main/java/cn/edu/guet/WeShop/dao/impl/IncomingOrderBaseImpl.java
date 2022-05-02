@@ -1,12 +1,10 @@
 package cn.edu.guet.WeShop.dao.impl;
 
 import cn.edu.guet.WeShop.bean.IncomingOrderbase;
-import cn.edu.guet.WeShop.bean.Orderbase;
-import cn.edu.guet.WeShop.dao.ReplenishStockBaseDao;
+import cn.edu.guet.WeShop.dao.IncomingOrderBaseDao;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -14,7 +12,7 @@ import java.sql.SQLException;
  * @Author Pangjiaen
  * @Date 2022/5/1 17:57:44
  */
-public class ReplenishStockBaseImpl implements ReplenishStockBaseDao {
+public class IncomingOrderBaseImpl implements IncomingOrderBaseDao {
     @Override
     public void addOrderBase(IncomingOrderbase incomingOrderbase) throws SQLException {
         Connection conn = null;

@@ -12,6 +12,6 @@ import java.sql.SQLException;
 /**
  * 进货时如果没有该商品就增加
  */
-public interface AddItemDao {
+public interface ItemDao {
     void AddItem(Item item) throws SQLException;
 }

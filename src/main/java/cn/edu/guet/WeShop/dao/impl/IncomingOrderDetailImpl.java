@@ -1,12 +1,10 @@
 package cn.edu.guet.WeShop.dao.impl;
 
 import cn.edu.guet.WeShop.bean.IncomingOrderdetail;
-import cn.edu.guet.WeShop.bean.Orderdetail;
-import cn.edu.guet.WeShop.dao.ReplenishStockDetailDao;
+import cn.edu.guet.WeShop.dao.IncomingOrderDetailDao;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -14,7 +12,7 @@ import java.sql.SQLException;
  * @Author Pangjiaen
  * @Date 2022/5/1 17:52:19
  */
-public class ReplenishStockDetailImpl implements ReplenishStockDetailDao {
+public class IncomingOrderDetailImpl implements IncomingOrderDetailDao {
 
     @Override
     public void addOrderDetail(IncomingOrderdetail incomingOrderdetail) throws SQLException {
