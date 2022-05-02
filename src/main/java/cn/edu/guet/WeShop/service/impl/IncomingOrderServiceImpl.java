@@ -4,15 +4,15 @@ import cn.edu.guet.WeShop.bean.IncomingOrderbase;
 import cn.edu.guet.WeShop.bean.IncomingOrderdetail;
 import cn.edu.guet.WeShop.bean.Item;
 import cn.edu.guet.WeShop.bean.Item_stock;
-import cn.edu.guet.WeShop.dao.AddItemDao;
-import cn.edu.guet.WeShop.dao.IncreaseItemStockDao;
-import cn.edu.guet.WeShop.dao.ReplenishStockBaseDao;
-import cn.edu.guet.WeShop.dao.ReplenishStockDetailDao;
-import cn.edu.guet.WeShop.dao.impl.AddItemImpl;
-import cn.edu.guet.WeShop.dao.impl.IncreaseItemImpl;
-import cn.edu.guet.WeShop.dao.impl.ReplenishStockBaseImpl;
-import cn.edu.guet.WeShop.dao.impl.ReplenishStockDetailImpl;
-import cn.edu.guet.WeShop.service.ReplenishStockService;
+import cn.edu.guet.WeShop.dao.ItemDao;
+import cn.edu.guet.WeShop.dao.ItemStockDao;
+import cn.edu.guet.WeShop.dao.IncomingOrderBaseDao;
+import cn.edu.guet.WeShop.dao.IncomingOrderDetailDao;
+import cn.edu.guet.WeShop.dao.impl.ItemImpl;
+import cn.edu.guet.WeShop.dao.impl.ItemStockImpl;
+import cn.edu.guet.WeShop.dao.impl.IncomingOrderBaseImpl;
+import cn.edu.guet.WeShop.dao.impl.IncomingOrderDetailImpl;
+import cn.edu.guet.WeShop.service.IncomingOrderService;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import java.sql.Connection;
@@ -22,16 +22,16 @@ import java.sql.SQLException;
  * @Author Pangjiaen
  * @Date 2022/5/1 19:51:43
  */
-public class ReplenishStockServiceImpl implements ReplenishStockService {
+public class IncomingOrderServiceImpl implements IncomingOrderService {
     Connection conn = null;
     @Override
     public void newIncomingOrderCaseOne(IncomingOrderdetail incomingOrderdetail, IncomingOrderbase incomingOrderbase, Item_stock item_stock) {
 
 
         try {
-            ReplenishStockBaseDao replenishStockBaseDao = new ReplenishStockBaseImpl();
-            ReplenishStockDetailDao replenishStockDetailDao = new ReplenishStockDetailImpl();
-            IncreaseItemStockDao increaseItemStockDao = new IncreaseItemImpl();
+            IncomingOrderBaseDao replenishStockBaseDao = new IncomingOrderBaseImpl();
+            IncomingOrderDetailDao replenishStockDetailDao = new IncomingOrderDetailImpl();
+            ItemStockDao increaseItemStockDao = new ItemStockImpl();
 
             conn = ConnectionHandler.getConn();
 
@@ -63,10 +63,10 @@ public class ReplenishStockServiceImpl implements ReplenishStockService {
     public void newIncomingOrderCaseTwo(IncomingOrderdetail incomingOrderdetail, IncomingOrderbase incomingOrderbase, Item_stock item_stock, Item item) {
 
         try {
-            ReplenishStockBaseDao replenishStockBaseDao = new ReplenishStockBaseImpl();
-            ReplenishStockDetailDao replenishStockDetailDao = new ReplenishStockDetailImpl();
-            IncreaseItemStockDao increaseItemStockDao = new IncreaseItemImpl();
-            AddItemDao addItemDao = new AddItemImpl();
+            IncomingOrderBaseDao replenishStockBaseDao = new IncomingOrderBaseImpl();
+            IncomingOrderDetailDao replenishStockDetailDao = new IncomingOrderDetailImpl();
+            ItemStockDao increaseItemStockDao = new ItemStockImpl();
+            ItemDao addItemDao = new ItemImpl();
 
             conn = ConnectionHandler.getConn();
 
