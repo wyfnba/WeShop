@@ -73,7 +73,7 @@ public class ShoppingCart extends JFrame {
         button2.setBounds(610, 355, 100, 30);
         button2.addActionListener(
                 e -> {
-                    ///WXPay.unifiedOrder();
+                    WXPay.unifiedOrder();
                     Pay pay = new Pay();
                     pay.setVisible(true);
                 }
