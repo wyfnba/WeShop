@@ -1,11 +1,15 @@
 package cn.edu.guet.WeShop.ui;
 
 import cn.edu.guet.WeShop.bean.Item;
+import cn.edu.guet.WeShop.bean.Orderbase;
+import cn.edu.guet.WeShop.bean.Orderdetail;
 import cn.edu.guet.WeShop.pay.WXPay;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -14,6 +18,11 @@ import java.awt.*;
 public class ShoppingCart extends JFrame {
     java.util.List<Item> list;
     java.util.List<String> amount;
+    List<Orderdetail> orderdetailList=new ArrayList<>();
+
+    public ShoppingCart(){
+
+    }
 
     public ShoppingCart(java.util.List<Item> list, java.util.List<String> amount) {
         this.list = list;
@@ -60,6 +69,10 @@ public class ShoppingCart extends JFrame {
         button1.addActionListener(
                 e -> {
                     try {
+                        for (int i=0;i<list.size();i++){
+                            Orderdetail orderdetail=new Orderdetail("","",list.get(i).getId(),Integer.parseInt(amount.get(i)));
+                            orderdetailList.add(orderdetail);
+                        }
                         WXPay.scanCodeToPay(textField2.getText());
                     } catch (Exception ex) {
                         ex.printStackTrace();

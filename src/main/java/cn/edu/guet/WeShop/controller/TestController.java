@@ -2,6 +2,9 @@ package cn.edu.guet.WeShop.controller;
 
 import cn.edu.guet.WeShop.bean.IncomingOrderbase;
 import cn.edu.guet.WeShop.bean.IncomingOrderdetail;
+import cn.edu.guet.WeShop.bean.Orderbase;
+import cn.edu.guet.WeShop.bean.Orderdetail;
+import cn.edu.guet.WeShop.ui.ShoppingCart;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,6 +90,9 @@ public class TestController {
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
                 Timestamp timestamp = new Timestamp(sdf.parse(orderTime).getTime());
+
+                //Orderbase orderbase=new Orderbase(Integer.parseInt(mch_id),orderNo,orderTime,transactionId,user_id,order_price);
+
 
                 /*
                 Order order = new Order();

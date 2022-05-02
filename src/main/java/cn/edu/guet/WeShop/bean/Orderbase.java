@@ -2,6 +2,7 @@ package cn.edu.guet.WeShop.bean;
 
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Orderbase {
     private String id;
@@ -16,8 +17,8 @@ public class Orderbase {
 
     }
 
-    public Orderbase(String id, int mch_id, String out_trade_no, Timestamp time_end, String transaction_id, String user_id, double order_price) {
-        this.id = id;
+    public Orderbase(int mch_id, String out_trade_no, Timestamp time_end, String transaction_id, String user_id, double order_price) {
+        this.id = UUID.randomUUID().toString().replace("-", "");
         this.mch_id = mch_id;
         this.out_trade_no = out_trade_no;
         this.time_end = time_end;
