@@ -71,8 +71,7 @@ public class TestController {
             request.getReader().close();
             String response = inputString.toString();//接收的回调结果（支付成功后，腾讯调用我们的接口，并发数据给我们）
             String pattern =
-                    ".+<attach><!\\[CDATA\\[(.+);.+" +
-                            "<mch_id><!\\[CDATA\\[(\\d{10}).+" +
+                    ".+<mch_id><!\\[CDATA\\[(\\d{10}).+" +
                             "<out_trade_no><!\\[CDATA\\[(.{32}).+" +
                             "<time_end><!\\[CDATA\\[(\\d{14}).+" +
                             "<transaction_id><!\\[CDATA\\[(\\d{28})";
@@ -80,17 +79,24 @@ public class TestController {
             // 现在创建 matcher 对象
             Matcher m = r.matcher(response);
             if (m.find()) {
-
+                /*
                 String itemInfo = m.group(1);
+                System.out.println(itemInfo);
                 String item[] = itemInfo.split(";");
-
                 String item_id = item[0].split(",")[1];
+                System.out.println(item_id);
                 String item_price = item[1].split(",")[1];
+                System.out.println(item_price);
                 String item_amount = item[2].split(",")[1];
-                String mch_id = m.group(2);
-                String orderNo = m.group(3);
-                String orderTime = m.group(4);
-                String transactionId = m.group(5);
+                System.out.println(item_amount);
+
+                 */
+                String mch_id = m.group(1);
+                System.out.println(mch_id);
+                String orderNo = m.group(2);
+                String orderTime = m.group(3);
+                System.out.println(orderTime);
+                String transactionId = m.group(4);
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
                 Timestamp timestamp = new Timestamp(sdf.parse(orderTime).getTime());

@@ -37,6 +37,7 @@ public class ItemStockImpl implements ItemStockDao {
         Connection conn = null;
         try {
             conn = ConnectionHandler.getConn();
+            System.out.println("ItemStockDaoImpl："+conn.hashCode());
             String sql = "UPDATE item_stock SET stock = stock-? WHERE item_id = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);

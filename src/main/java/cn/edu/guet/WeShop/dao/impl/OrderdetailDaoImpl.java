@@ -15,7 +15,7 @@ public class OrderdetailDaoImpl implements OrderdetailDao {
         Connection conn=null;
         try {
             conn= ConnectionHandler.getConn();
-            System.out.println("OrderDaoImpl："+conn.hashCode());
+            System.out.println("OrderdetailDaoImpl："+conn.hashCode());
             String sql="INSERT INTO orderdetail VALUES(?,?,?,?)";
             PreparedStatement pstmt=conn.prepareStatement(sql);
             pstmt.setString(1,orderdetail.getId());

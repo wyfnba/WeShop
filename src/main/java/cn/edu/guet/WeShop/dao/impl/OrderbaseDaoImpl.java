@@ -16,7 +16,7 @@ public class OrderbaseDaoImpl implements OrderbaseDao {
         Connection conn=null;
         try {
             conn= ConnectionHandler.getConn();
-            System.out.println("OrderDaoImpl："+conn.hashCode());
+            System.out.println("OrderbaseDaoImpl："+conn.hashCode());
             String sql="INSERT INTO orderbase VALUES(?,?,?,?,?,?,?)";
             PreparedStatement pstmt=conn.prepareStatement(sql);
             pstmt.setString(1,orderbase.getId());

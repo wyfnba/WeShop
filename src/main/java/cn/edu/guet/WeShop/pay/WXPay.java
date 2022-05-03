@@ -53,14 +53,14 @@ public class WXPay {
         cn.edu.guet.WeShop.sdk.WXPay wxpay = new cn.edu.guet.WeShop.sdk.WXPay(config);
         String out_trade_no = DateUtil.getCurrentTime();
         Map<String, String> map = new HashMap<>(16);
-        map.put("attach", "订单额外描述");
+        //map.put("attach", "id,11111;price,18.00;amount,1;");
         map.put("auth_code", auth_code);
         map.put("body", "小米手机");
         map.put("device_info", "");
         map.put("nonce_str", WXPayUtil.generateNonceStr());
         map.put("out_trade_no", out_trade_no);
         map.put("spbill_create_ip", spbill_create_ip);
-        map.put("total_fee", money);
+        map.put("total_fee", "1");
         //生成签名
         String sign = WXPayUtil.generateSignature(map, config.getKey());
         map.put("sign", sign);
@@ -158,7 +158,7 @@ public class WXPay {
         //支付金额，需要转成字符串类型，否则后面的签名会失败
         int total_fee = 1;//100分：1块钱
         //商品描述
-        String body = "路由器";
+        String body = "WeShop";
         //商户订单号
         String out_trade_no = WXPayUtil.generateNonceStr();
         //统一下单接口参数
