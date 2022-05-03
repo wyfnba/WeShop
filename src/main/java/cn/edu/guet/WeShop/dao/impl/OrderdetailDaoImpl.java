@@ -21,7 +21,7 @@ public class OrderdetailDaoImpl implements OrderdetailDao {
             pstmt.setString(1,orderdetail.getId());
             pstmt.setString(2,orderdetail.getOrderbase_id());
             pstmt.setString(3,orderdetail.getItem_id());
-            pstmt.setInt(4,orderdetail.getAmount());
+            pstmt.setDouble(4,orderdetail.getAmount());
 
             pstmt.executeUpdate();//真正执行sql语句
 
