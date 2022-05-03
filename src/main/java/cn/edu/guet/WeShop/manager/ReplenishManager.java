@@ -76,6 +76,13 @@ public class ReplenishManager {
             item.setTitle(title);
             item.setPrice(price);
             item.setSales(0);
+
+            String id1 = UUID.randomUUID().toString().replace("-", "");
+            item.setId(id1);
+
+            incomingOrderdetail.setItem_id(id1);
+            item_stock.setItem_id(id1);
+
             replenishStockService.newIncomingOrderCaseTwo(incomingOrderdetail,incomingOrderbase,item_stock,item);
         }else{
             replenishStockService.newIncomingOrderCaseOne(incomingOrderdetail,incomingOrderbase,item_stock);

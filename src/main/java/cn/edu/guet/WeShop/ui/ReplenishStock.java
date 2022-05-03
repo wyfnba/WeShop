@@ -20,6 +20,7 @@ public class ReplenishStock extends JFrame {
 
     public ReplenishStock(String user_id) {
         this.user_id = user_id;
+
         initComponents();
     }
 
@@ -113,7 +114,9 @@ public class ReplenishStock extends JFrame {
                     try {
                         conn = ConnectionHandler.getConn();
                         PreparedStatement ps = conn.prepareStatement(sql1);
-                        ps.setString(1,title);
+
+                        //这里的textField1.getText()不能用
+                        ps.setString(1,textField1.getText());
                         rs1 = ps.executeQuery();
                         ReplenishManager replenishManager = null;
                         if (rs1.next()){
@@ -131,6 +134,7 @@ public class ReplenishStock extends JFrame {
                             item_id = UUID.randomUUID().toString().replace("-", "");
                             price = Double.parseDouble(textField3.getText());
                             stock = amount;//如果还没有该商品，则进货量即为库存量
+                            title = textField1.getText();
                             replenishManager = new ReplenishManager(true,stock,price,title);
                         }
                         replenishManager.PackagingClass(money,user_id,item_id,amount);

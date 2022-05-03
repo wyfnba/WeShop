@@ -75,7 +75,7 @@ public class IncomingOrderServiceImpl implements IncomingOrderService {
             addItemDao.AddItem(item);
             replenishStockBaseDao.addOrderBase(incomingOrderbase);
             replenishStockDetailDao.addOrderDetail(incomingOrderdetail);
-            increaseItemStockDao.increaseItemStock(item_stock);
+            increaseItemStockDao.insertItemStock(item_stock);
 
 
             conn.commit();

@@ -18,12 +18,13 @@ public class ItemImpl implements ItemDao {
         Connection conn = null;
         try {
             conn = ConnectionHandler.getConn();
-            String sql = "INSERT INTO Item(title,price,sales) VALUES(?,?,?)";
+            String sql = "INSERT INTO item(id,title,price,sales) VALUES(?,?,?,?)";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,item.getTitle());
-            pstmt.setDouble(2,item.getPrice());
-            pstmt.setInt(3,item.getSales());
+            pstmt.setString(1,item.getId());
+            pstmt.setString(2,item.getTitle());
+            pstmt.setDouble(3,item.getPrice());
+            pstmt.setInt(4,item.getSales());
 
             pstmt.executeUpdate();
 
