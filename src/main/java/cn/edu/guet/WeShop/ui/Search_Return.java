@@ -1,5 +1,6 @@
 package cn.edu.guet.WeShop.ui;
 
+import cn.edu.guet.WeShop.TableSearch.Username_Return;
 import cn.edu.guet.WeShop.bean.IncomingOrderbase;
 import cn.edu.guet.WeShop.bean.ReturnOrderbase;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
@@ -17,10 +18,10 @@ import java.util.ArrayList;
 /**
  * @liwei
  */
-public class Incoming_Search extends JFrame {
-    java.util.List<IncomingOrderbase> list = new ArrayList<IncomingOrderbase>();
+public class Search_Return extends JFrame {
+    java.util.List<Username_Return> list = new ArrayList<Username_Return>();
     String username;
-    public Incoming_Search(String username) {
+    public Search_Return(String username) {
         this.username=username;
         initComponents();
     }
@@ -57,8 +58,8 @@ public class Incoming_Search extends JFrame {
         button1.addActionListener(
                 (e) -> {
                     this.setVisible(false);
-                    Sale_Stock sale_stock=new Sale_Stock();
-                    sale_stock.setVisible(true);
+                    Sale_Return sale_return=new Sale_Return();
+                    sale_return.setVisible(true);
                 }
         );
 
@@ -90,23 +91,21 @@ public class Incoming_Search extends JFrame {
 
         Connection conn = null;
         PreparedStatement ps=null;
-        String sql = "SELECT i.* \n" +
-                "FROM user u,incoming_orderbase i \n" +
-                "WHERE u.id=i.user_id && u.username=?\n" +
-                "GROUP BY i.id";
+        String sql = "SELECT u.username,r.money,r.time \n" +
+                     "FROM user u,return_orderbase r \n" +
+                     "WHERE u.id=r.user_id and u.username='"+username+"'";
         ResultSet rs = null;
         try {
             conn= ConnectionHandler.getConn();
             ps = conn.prepareStatement(sql);
-            ps.setString(1,username);
+            //ps.setString(1,username);
             rs = ps.executeQuery(sql);
             while (rs.next()) {
-                IncomingOrderbase incomingOrderbase=new IncomingOrderbase();
-                incomingOrderbase.setId(rs.getString(1));
-                incomingOrderbase.setUser_id(rs.getString(2));
-                incomingOrderbase.setMoney(rs.getDouble(3));
-                incomingOrderbase.setTime(rs.getTimestamp(4));
-                this.list.add(incomingOrderbase);
+                Username_Return username_return=new Username_Return();
+                username_return.setUsername(rs.getString(1));
+                username_return.setMoney(rs.getDouble(2));
+                username_return.setTime(rs.getTimestamp(3));
+                this.list.add(username_return);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -123,17 +122,16 @@ public class Incoming_Search extends JFrame {
         data = new Object[this.list.size()][head.length];
 
         for (int i = 0; i < this.list.size(); i++) {
-            data[i][0] = this.list.get(i).getId();
-            data[i][1] = this.list.get(i).getUser_id();
-            data[i][2] = this.list.get(i).getMoney();
-            data[i][3]=this.list.get(i).getTime();
+            data[i][0] = this.list.get(i).getUsername();
+            data[i][1] = this.list.get(i).getMoney();
+            data[i][2] = this.list.get(i).getTime();
         }
         return data;
     }
 
     private JScrollPane scrollPane1;
     private JTable table1;
-    private String head[] = {"商品id", "经手人id", "入账金额","交易时间"};
+    private String head[] = {"经手人姓名", "入账金额", "交易时间"};
     private Object[][] data = null;
     private JButton button1;
     private JButton button2;

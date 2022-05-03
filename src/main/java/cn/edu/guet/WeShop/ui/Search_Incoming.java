@@ -1,5 +1,6 @@
 package cn.edu.guet.WeShop.ui;
 
+import cn.edu.guet.WeShop.TableSearch.Username_Incoming;
 import cn.edu.guet.WeShop.bean.IncomingOrderbase;
 import cn.edu.guet.WeShop.bean.ReturnOrderbase;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
@@ -17,10 +18,10 @@ import java.util.ArrayList;
 /**
  * @liwei
  */
-public class Return_Search extends JFrame {
-    java.util.List<ReturnOrderbase> list = new ArrayList<ReturnOrderbase>();
+public class Search_Incoming extends JFrame {
+    java.util.List<Username_Incoming> list = new ArrayList<Username_Incoming>();
     String username;
-    public Return_Search(String username) {
+    public Search_Incoming(String username) {
         this.username=username;
         initComponents();
     }
@@ -33,7 +34,7 @@ public class Return_Search extends JFrame {
         button3 = new JButton();
         label1 = new JLabel();
         label2 = new JLabel();
-        textField1 = new JTextField();
+        textField1 = new JTextField("");
 
         DefaultTableModel tableModel = new DefaultTableModel(getDataFromDatabase(), head) {
             public boolean isCellEditable(int row, int column) {
@@ -57,8 +58,8 @@ public class Return_Search extends JFrame {
         button1.addActionListener(
                 (e) -> {
                     this.setVisible(false);
-                    Sale_Return sale_return=new Sale_Return();
-                    sale_return.setVisible(true);
+                    Sale_Stock sale_stock=new Sale_Stock();
+                    sale_stock.setVisible(true);
                 }
         );
 
@@ -90,23 +91,21 @@ public class Return_Search extends JFrame {
 
         Connection conn = null;
         PreparedStatement ps=null;
-        String sql = "SELECT i.* \n" +
-                     "FROM user u,return_orderbase r \n" +
-                     "WHERE u.id=r.user_id && u.username=?\n" +
-                     "GROUP BY r.id";
+        String sql = "SELECT u.username,i.money,i.time " +
+                "FROM user u,incoming_orderbase i " +
+                "WHERE u.id=i.user_id AND u.username='"+username+"'" ;
         ResultSet rs = null;
         try {
             conn= ConnectionHandler.getConn();
             ps = conn.prepareStatement(sql);
-            ps.setString(1,username);
+            //ps.setString(1,username);
             rs = ps.executeQuery(sql);
             while (rs.next()) {
-                ReturnOrderbase returnOrderbase=new ReturnOrderbase();
-                returnOrderbase.setId(rs.getString(1));
-                returnOrderbase.setUser_id(rs.getString(2));
-                returnOrderbase.setMoney(rs.getDouble(3));
-                returnOrderbase.setTime(rs.getTimestamp(4));
-                this.list.add(returnOrderbase);
+                Username_Incoming username_incoming=new Username_Incoming();
+                username_incoming.setUsername(rs.getString(1));
+                username_incoming.setMoney(rs.getDouble(2));
+                username_incoming.setTime(rs.getTimestamp(3));
+                this.list.add(username_incoming);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -123,17 +122,16 @@ public class Return_Search extends JFrame {
         data = new Object[this.list.size()][head.length];
 
         for (int i = 0; i < this.list.size(); i++) {
-            data[i][0] = this.list.get(i).getId();
-            data[i][1] = this.list.get(i).getUser_id();
-            data[i][2] = this.list.get(i).getMoney();
-            data[i][3]=this.list.get(i).getTime();
+            data[i][0] = this.list.get(i).getUsername();
+            data[i][1] = this.list.get(i).getMoney();
+            data[i][2] = this.list.get(i).getTime();
         }
         return data;
     }
 
     private JScrollPane scrollPane1;
     private JTable table1;
-    private String head[] = {"商品id", "经手人id", "入账金额","交易时间"};
+    private String head[] = {"经手人姓名", "出账金额","交易时间"};
     private Object[][] data = null;
     private JButton button1;
     private JButton button2;

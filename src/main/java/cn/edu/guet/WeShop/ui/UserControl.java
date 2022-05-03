@@ -63,7 +63,10 @@ public class UserControl extends JFrame {
         button1.setBounds(300, 355, 100, 30);
         button1.addActionListener(
                 (e) -> {
-
+                    this.setVisible(false);
+                    String username=textField1.getText();
+                    Search_User search_user=new Search_User(username);
+                    search_user.setVisible(true);
                 }
         );
 
