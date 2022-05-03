@@ -80,9 +80,9 @@ public class ShoppingCart extends JFrame {
                         for (int i=0;i<list.size();i++){
                             Orderdetail orderdetail=new Orderdetail("","",list.get(i).getId(),Double.parseDouble(amount.get(i)));
                             orderdetailList.add(orderdetail);
-                            price=price+list.get(i).getPrice();
+                            price=price+list.get(i).getPrice()*Double.parseDouble(amount.get(i));
                         }
-                        WXPay.scanCodeToPay(textField2.getText());
+                        //WXPay.scanCodeToPay(textField2.getText());
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
