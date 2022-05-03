@@ -14,4 +14,5 @@ import java.sql.SQLException;
  */
 public interface ItemStockDao {
     void increaseItemStock(Item_stock item_stock) throws SQLException;
+    void decreaseItemStock(Item_stock item_stock) throws SQLException;
 }

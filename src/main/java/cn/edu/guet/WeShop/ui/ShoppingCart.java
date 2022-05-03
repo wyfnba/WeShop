@@ -1,11 +1,14 @@
 package cn.edu.guet.WeShop.ui;
 
 import cn.edu.guet.WeShop.bean.Item;
+import cn.edu.guet.WeShop.bean.Orderdetail;
 import cn.edu.guet.WeShop.pay.WXPay;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -14,6 +17,20 @@ import java.awt.*;
 public class ShoppingCart extends JFrame {
     java.util.List<Item> list;
     java.util.List<String> amount;
+    public static List<Orderdetail> orderdetailList=new ArrayList<>();
+    public static double price=0;
+
+    public static List<Orderdetail> getOrderdetailList(){
+        return orderdetailList;
+    }
+
+    public static double getPrice(){
+        return price;
+    }
+
+    public ShoppingCart(){
+
+    }
 
     public ShoppingCart(java.util.List<Item> list, java.util.List<String> amount) {
         this.list = list;
@@ -60,7 +77,12 @@ public class ShoppingCart extends JFrame {
         button1.addActionListener(
                 e -> {
                     try {
-                        WXPay.scanCodeToPay(textField2.getText());
+                        for (int i=0;i<list.size();i++){
+                            Orderdetail orderdetail=new Orderdetail("","",list.get(i).getId(),Double.parseDouble(amount.get(i)));
+                            orderdetailList.add(orderdetail);
+                            price=price+list.get(i).getPrice()*Double.parseDouble(amount.get(i));
+                        }
+                        //WXPay.scanCodeToPay(textField2.getText());
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }

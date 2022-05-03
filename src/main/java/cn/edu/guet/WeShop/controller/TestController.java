@@ -1,7 +1,9 @@
 package cn.edu.guet.WeShop.controller;
 
-import cn.edu.guet.WeShop.bean.IncomingOrderbase;
-import cn.edu.guet.WeShop.bean.IncomingOrderdetail;
+import cn.edu.guet.WeShop.bean.*;
+import cn.edu.guet.WeShop.service.OrderService;
+import cn.edu.guet.WeShop.service.impl.OrderServiceImpl;
+import cn.edu.guet.WeShop.ui.ShoppingCart;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +17,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static cn.edu.guet.WeShop.ui.Login.user_id;
+import static cn.edu.guet.WeShop.ui.ShoppingCart.price;
 
 /**
  * @Author liwei
@@ -87,6 +94,15 @@ public class TestController {
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
                 Timestamp timestamp = new Timestamp(sdf.parse(orderTime).getTime());
+
+                Orderbase orderbase=new Orderbase(Integer.parseInt(mch_id),orderNo,timestamp,transactionId,user_id,price);
+                System.out.println(orderbase.getId());
+                List<Orderdetail> orderdetailList= ShoppingCart.getOrderdetailList();
+                for (int i=0;i<orderdetailList.size();i++){
+                    orderdetailList.get(i).setOrderbase_id(orderbase.getId());
+                }
+                OrderService orderService=new OrderServiceImpl();
+                orderService.addOrder(orderbase,orderdetailList);
 
                 /*
                 Order order = new Order();

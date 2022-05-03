@@ -7,11 +7,11 @@ import java.sql.*;
  * Created by JFormDesigner on Sat Apr 02 15:41:52 CST 2022
  */
 
-
 /**
  * @author 1
  */
 public class Login extends JFrame {
+    public static String user_id;
     public Login() {
         initComponents();
     }
@@ -62,6 +62,7 @@ public class Login extends JFrame {
                     Connection conn = null;
                     // 拼sql，容易有注入攻击
                     String sql = "SELECT * FROM user WHERE username='" + username + "' AND password='" + password + "'";
+
                     System.out.println(sql);
                     ResultSet rs = null;//结果集：内存，存储了查询到的数据；内存区有一个游标，执行完查询的时候，不指向任何记录
                     Statement stmt = null;//语句对象，容易产生注入攻击
@@ -72,6 +73,7 @@ public class Login extends JFrame {
                         stmt = conn.createStatement();
                         rs = stmt.executeQuery(sql);
                         if (rs.next()) {//让游标向下移动一次
+                            user_id=rs.getString(1);
                             System.out.println("登录成功");
                             this.setVisible(false);
                             if ("采购员".equals(rs.getString(4))){

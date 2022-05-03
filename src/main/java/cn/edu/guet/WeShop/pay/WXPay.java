@@ -1,5 +1,6 @@
 package cn.edu.guet.WeShop.pay;
 
+import cn.edu.guet.WeShop.bean.Orderdetail;
 import cn.edu.guet.WeShop.sdk.WXPayUtil;
 import cn.edu.guet.WeShop.util.DateUtil;
 import com.google.zxing.BarcodeFormat;
@@ -15,13 +16,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class WXPay {
-    private static String money;
+    static String money;
 
     private static Log log = LogFactory.getLog(WXPay.class);
 
