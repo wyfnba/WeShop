@@ -31,4 +31,23 @@ public class ItemStockImpl implements ItemStockDao {
             throw new SQLException("修改商品库存失败");
         }
     }
+
+    @Override
+    public void decreaseItemStock(Item_stock item_stock) throws SQLException {
+        Connection conn = null;
+        try {
+            conn = ConnectionHandler.getConn();
+            String sql = "UPDATE item_stock SET stock = stock-? WHERE item_id = ?";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setDouble(1,item_stock.getStock());
+            pstmt.setString(2,item_stock.getItem_id());
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("修改商品库存失败");
+        }
+    }
 }

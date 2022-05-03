@@ -6,13 +6,13 @@ public class Orderdetail {
     private String id;
     private String orderbase_id;
     private String item_id;
-    private int amount;
+    private double amount;
 
     public Orderdetail(){
 
     }
 
-    public Orderdetail(String id, String orderbase_id, String item_id, int amount) {
+    public Orderdetail(String id, String orderbase_id, String item_id, double amount) {
         this.id = id;
         this.orderbase_id = orderbase_id;
         this.item_id = item_id;
@@ -43,11 +43,11 @@ public class Orderdetail {
         this.item_id = item_id;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

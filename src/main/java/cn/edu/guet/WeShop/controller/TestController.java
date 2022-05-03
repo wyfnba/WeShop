@@ -1,9 +1,6 @@
 package cn.edu.guet.WeShop.controller;
 
-import cn.edu.guet.WeShop.bean.IncomingOrderbase;
-import cn.edu.guet.WeShop.bean.IncomingOrderdetail;
-import cn.edu.guet.WeShop.bean.Orderbase;
-import cn.edu.guet.WeShop.bean.Orderdetail;
+import cn.edu.guet.WeShop.bean.*;
 import cn.edu.guet.WeShop.service.OrderService;
 import cn.edu.guet.WeShop.service.impl.OrderServiceImpl;
 import cn.edu.guet.WeShop.ui.ShoppingCart;

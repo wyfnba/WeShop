@@ -1,9 +1,12 @@
 package cn.edu.guet.WeShop.service.impl;
 
+import cn.edu.guet.WeShop.bean.Item_stock;
 import cn.edu.guet.WeShop.bean.Orderbase;
 import cn.edu.guet.WeShop.bean.Orderdetail;
+import cn.edu.guet.WeShop.dao.ItemStockDao;
 import cn.edu.guet.WeShop.dao.OrderbaseDao;
 import cn.edu.guet.WeShop.dao.OrderdetailDao;
+import cn.edu.guet.WeShop.dao.impl.ItemStockImpl;
 import cn.edu.guet.WeShop.dao.impl.OrderbaseDaoImpl;
 import cn.edu.guet.WeShop.dao.impl.OrderdetailDaoImpl;
 import cn.edu.guet.WeShop.service.OrderService;
@@ -21,6 +24,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             OrderbaseDao orderbaseDao=new OrderbaseDaoImpl();
             OrderdetailDao orderdetailDao=new OrderdetailDaoImpl();
+            ItemStockDao itemStockDao=new ItemStockImpl();
 
             conn = ConnectionHandler.getConn();
 
@@ -30,7 +34,10 @@ public class OrderServiceImpl implements OrderService {
             orderbaseDao.addOrder(orderbase);
             for(int i=0;i<orderdetailList.size();i++){
                 orderdetailDao.addOrder(orderdetailList.get(i));
+                Item_stock item_stock=new Item_stock(orderdetailList.get(i).getAmount(),orderdetailList.get(i).getItem_id());
+                itemStockDao.decreaseItemStock(item_stock);
             }
+
 
             conn.commit();
         } catch (SQLException throwables) {

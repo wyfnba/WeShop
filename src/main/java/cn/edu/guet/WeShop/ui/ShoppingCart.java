@@ -78,7 +78,7 @@ public class ShoppingCart extends JFrame {
                 e -> {
                     try {
                         for (int i=0;i<list.size();i++){
-                            Orderdetail orderdetail=new Orderdetail("","",list.get(i).getId(),Integer.parseInt(amount.get(i)));
+                            Orderdetail orderdetail=new Orderdetail("","",list.get(i).getId(),Double.parseDouble(amount.get(i)));
                             orderdetailList.add(orderdetail);
                             price=price+list.get(i).getPrice();
                         }

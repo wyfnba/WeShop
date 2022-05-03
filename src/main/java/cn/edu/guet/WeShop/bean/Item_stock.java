@@ -11,6 +11,14 @@ public class Item_stock {
     private double stock;
     private String item_id;
 
+    public Item_stock() {
+    }
+
+    public Item_stock(double stock, String item_id) {
+        this.stock = stock;
+        this.item_id = item_id;
+    }
+
     public String getId() {
         return id;
     }
