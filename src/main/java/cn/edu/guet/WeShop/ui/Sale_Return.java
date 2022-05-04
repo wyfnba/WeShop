@@ -1,7 +1,7 @@
 package cn.edu.guet.WeShop.ui;
 
 import cn.edu.guet.WeShop.TableSearch.SumMoney;
-import cn.edu.guet.WeShop.TableSearch.Username_Return;
+import cn.edu.guet.WeShop.TableSearch.User_Return;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * @liwei
  */
 public class Sale_Return extends JFrame {
-    java.util.List<Username_Return> list = new ArrayList<Username_Return>();
+    java.util.List<User_Return> list = new ArrayList<User_Return>();
     public Sale_Return() {
         initComponents();
     }
@@ -60,18 +60,18 @@ public class Sale_Return extends JFrame {
         label3.setFont(new Font("宋体",Font.BOLD,15));
         label3.setText("入账金额：");
         contentPane.add(label3);
-        label3.setBounds(400,320,100,30);
+        label3.setBounds(400,355,80,30);
 
         Double money;
         SumMoney sumMoney=new SumMoney();
         money=sumMoney.ReturnMoney();
         label4.setText(String.valueOf(money));
         contentPane.add(label4);
-        label4.setBounds(510,320,100,30);
+        label4.setBounds(500,355,100,30);
 
         button1.setText("查询");
         contentPane.add(button1);
-        button1.setBounds(300, 355, 100, 30);
+        button1.setBounds(250, 355, 100, 30);
         button1.addActionListener(
                 (e) -> {
                     this.setVisible(false);
@@ -84,7 +84,7 @@ public class Sale_Return extends JFrame {
 
         button2.setText("返回");
         contentPane.add(button2);
-        button2.setBounds(500,355,100,30);
+        button2.setBounds(800,355,100,30);
         button2.addActionListener(
                 (e) -> {
                     this.setVisible(false);
@@ -131,7 +131,7 @@ public class Sale_Return extends JFrame {
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery(sql);
             while (rs.next()) {
-                Username_Return username_return = new Username_Return();
+                User_Return username_return = new User_Return();
                 username_return.setUsername(rs.getString(1));
                 username_return.setMoney(rs.getDouble(2));
                 username_return.setTime(rs.getTimestamp(3));

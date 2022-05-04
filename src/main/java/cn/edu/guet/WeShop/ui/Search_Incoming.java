@@ -1,8 +1,6 @@
 package cn.edu.guet.WeShop.ui;
 
-import cn.edu.guet.WeShop.TableSearch.Username_Incoming;
-import cn.edu.guet.WeShop.bean.IncomingOrderbase;
-import cn.edu.guet.WeShop.bean.ReturnOrderbase;
+import cn.edu.guet.WeShop.TableSearch.User_Incoming;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import javax.swing.*;
@@ -19,7 +17,7 @@ import java.util.ArrayList;
  * @liwei
  */
 public class Search_Incoming extends JFrame {
-    java.util.List<Username_Incoming> list = new ArrayList<Username_Incoming>();
+    java.util.List<User_Incoming> list = new ArrayList<User_Incoming>();
     String username;
     public Search_Incoming(String username) {
         this.username=username;
@@ -101,7 +99,7 @@ public class Search_Incoming extends JFrame {
             //ps.setString(1,username);
             rs = ps.executeQuery(sql);
             while (rs.next()) {
-                Username_Incoming username_incoming=new Username_Incoming();
+                User_Incoming username_incoming=new User_Incoming();
                 username_incoming.setUsername(rs.getString(1));
                 username_incoming.setMoney(rs.getDouble(2));
                 username_incoming.setTime(rs.getTimestamp(3));

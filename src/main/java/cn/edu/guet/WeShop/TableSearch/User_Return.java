@@ -3,15 +3,15 @@ package cn.edu.guet.WeShop.TableSearch;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-public class Username_Incoming {
+public class User_Return {
     private String  username;
     private double money;
     private Timestamp time;
 
-    public Username_Incoming() {
+    public User_Return() {
     }
 
-    public Username_Incoming(String username, double money, Timestamp time) {
+    public User_Return(String username, double money, Timestamp time) {
         this.username = username;
         this.money = money;
         this.time = time;
@@ -45,7 +45,7 @@ public class Username_Incoming {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Username_Incoming that = (Username_Incoming) o;
+        User_Return that = (User_Return) o;
         return Double.compare(that.money, money) == 0 && Objects.equals(username, that.username) && Objects.equals(time, that.time);
     }
 
