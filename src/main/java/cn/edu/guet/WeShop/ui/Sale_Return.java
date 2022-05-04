@@ -1,6 +1,7 @@
 package cn.edu.guet.WeShop.ui;
 
-import cn.edu.guet.WeShop.bean.ReturnOrderbase;
+import cn.edu.guet.WeShop.TableSearch.SumMoney;
+import cn.edu.guet.WeShop.TableSearch.Username_Return;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
  * @liwei
  */
 public class Sale_Return extends JFrame {
-    java.util.List<ReturnOrderbase> list = new ArrayList<ReturnOrderbase>();
+    java.util.List<Username_Return> list = new ArrayList<Username_Return>();
     public Sale_Return() {
         initComponents();
     }
@@ -30,6 +31,8 @@ public class Sale_Return extends JFrame {
         button3 = new JButton();
         label1 = new JLabel();
         label2 = new JLabel();
+        label3=new JLabel();
+        label4=new JLabel();
         textField1 = new JTextField();
 
         DefaultTableModel tableModel = new DefaultTableModel(getDataFromDatabase(), head) {
@@ -48,18 +51,33 @@ public class Sale_Return extends JFrame {
         contentPane.add(label1);
         label1.setBounds(460, 0, 600, 60);
 
-        label2.setText("经手人id：");
+        label2.setText("经手人姓名：");
         contentPane.add(label2);
-        label2.setBounds(20, 355, 70, 30);
+        label2.setBounds(20, 355, 100, 30);
         contentPane.add(textField1);
         textField1.setBounds(100, 355, 130, 30);
+
+        label3.setFont(new Font("宋体",Font.BOLD,15));
+        label3.setText("入账金额：");
+        contentPane.add(label3);
+        label3.setBounds(400,320,100,30);
+
+        Double money;
+        SumMoney sumMoney=new SumMoney();
+        money=sumMoney.ReturnMoney();
+        label4.setText(String.valueOf(money));
+        contentPane.add(label4);
+        label4.setBounds(510,320,100,30);
 
         button1.setText("查询");
         contentPane.add(button1);
         button1.setBounds(300, 355, 100, 30);
         button1.addActionListener(
                 (e) -> {
-
+                    this.setVisible(false);
+                    String textField1Text=textField1.getText();
+                    Search_Return search=new Search_Return(textField1Text);
+                    search.setVisible(true);
                 }
         );
 
@@ -103,23 +121,25 @@ public class Sale_Return extends JFrame {
 
         Connection conn = null;
         PreparedStatement ps=null;
-        String sql = "SELECT * FROM return_orderbase";
+        String sql = "SELECT u.username,r.money,r.time\n" +
+                "FROM user u,return_orderbase r\n" +
+                "WHERE u.id=r.user_id \n" +
+                "GROUP BY r.id";
         ResultSet rs = null;
         try {
             conn= ConnectionHandler.getConn();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery(sql);
             while (rs.next()) {
-                ReturnOrderbase return_orderbase = new ReturnOrderbase();
-                return_orderbase.setId(rs.getString(1));
-                return_orderbase.setUser_id(rs.getString(2));
-                return_orderbase.setMoney(rs.getInt(3));
-                return_orderbase.setTime(rs.getTimestamp(4));
-                this.list.add(return_orderbase);
+                Username_Return username_return = new Username_Return();
+                username_return.setUsername(rs.getString(1));
+                username_return.setMoney(rs.getDouble(2));
+                username_return.setTime(rs.getTimestamp(3));
+                this.list.add(username_return);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        } finally {
+        } /*finally {
             try {
                 rs.close();
                 ps.close();
@@ -127,23 +147,21 @@ public class Sale_Return extends JFrame {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-
-        }
+        }*/
         // 把集合的数据（商品信息）转换成二维数组
         data = new Object[this.list.size()][head.length];
 
         for (int i = 0; i < this.list.size(); i++) {
-            data[i][0] = this.list.get(i).getId();
-            data[i][1] = this.list.get(i).getUser_id();
-            data[i][2] = this.list.get(i).getMoney();
-            data[i][3]=this.list.get(i).getTime();
+            data[i][0] = this.list.get(i).getUsername();
+            data[i][1] = this.list.get(i).getMoney();
+            data[i][2] = this.list.get(i).getTime();
         }
         return data;
     }
 
     private JScrollPane scrollPane1;
     private JTable table1;
-    private String head[] = {"商品id", "经手人id", "入账金额","交易时间"};
+    private String head[] = {"经手人姓名", "入账金额", "交易时间"};
     private Object[][] data = null;
     private JButton button1;
     private JButton button2;
@@ -153,4 +171,6 @@ public class Sale_Return extends JFrame {
     private JTextField textField2;
     private JLabel label1;
     private JLabel label2;
+    private JLabel label3;
+    private JLabel label4;
 }

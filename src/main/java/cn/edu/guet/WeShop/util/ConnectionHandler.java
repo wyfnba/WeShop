@@ -25,6 +25,8 @@ public class ConnectionHandler {
         }
         return conn;
     }
+
+
     public static void closeConnection() throws SQLException {
         Connection conn=threadLocal.get();
         if(conn!=null){

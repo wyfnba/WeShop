@@ -1,37 +1,41 @@
 package cn.edu.guet.WeShop.ui;
 
-import cn.edu.guet.WeShop.TableSearch.SumMoney;
-import cn.edu.guet.WeShop.bean.Item;
-import cn.edu.guet.WeShop.bean.Orderdetail;
+import cn.edu.guet.WeShop.TableSearch.Username_Incoming;
+import cn.edu.guet.WeShop.bean.IncomingOrderbase;
+import cn.edu.guet.WeShop.bean.ReturnOrderbase;
+import cn.edu.guet.WeShop.bean.User;
+import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
  * @liwei
  */
-public class OrderList extends JFrame {
-    List<Orderdetail> list = new ArrayList<Orderdetail>();
-    public OrderList() {
+public class Search_User extends JFrame {
+    java.util.List<User> list = new ArrayList<User>();
+    String username;
+    public Search_User(String username) {
+        this.username=username;
         initComponents();
     }
 
     private void initComponents() {
-        List<Orderdetail> listc = new ArrayList<>();
-        List<String> amount = new ArrayList<>();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
         button1 = new JButton();
         button2 = new JButton();
         button3 = new JButton();
         label1 = new JLabel();
-        label2=new JLabel();
-        label3=new JLabel();
+        label2 = new JLabel();
+        textField1 = new JTextField("");
 
         DefaultTableModel tableModel = new DefaultTableModel(getDataFromDatabase(), head) {
             public boolean isCellEditable(int row, int column) {
@@ -45,55 +49,18 @@ public class OrderList extends JFrame {
         contentPane.setLayout(null);
 
         label1.setFont(new Font("STHeiti Light", Font.BOLD, 30));
-        label1.setText("订单列表");
+        label1.setText("查询结果");
         contentPane.add(label1);
         label1.setBounds(460, 0, 600, 60);
 
-        label2.setFont(new Font("宋体",Font.BOLD,15));
-        SumMoney sumMoney=new SumMoney();
-        Double IncomingMoney=sumMoney.IncomingMoney();
-        Double ReturnMoney=sumMoney.ReturnMoney();
-        Double Sum=IncomingMoney-ReturnMoney;
-        label2.setText(String.valueOf(Sum));
-        contentPane.add(label2);
-        label2.setBounds(510,320,100,30);
-
-        label3.setFont(new Font("宋体",Font.BOLD,15));
-        label3.setText("总收益：");
-        contentPane.add(label3);
-        label3.setBounds(400,320,100,30);
-
-        button1.setText("进货表");
+        button1.setText("返回");
         contentPane.add(button1);
-        button1.setBounds(20, 355, 100, 30);
+        button1.setBounds(500,355,100,30);
         button1.addActionListener(
                 (e) -> {
                     this.setVisible(false);
                     Sale_Stock sale_stock=new Sale_Stock();
                     sale_stock.setVisible(true);
-                }
-        );
-
-
-        button2.setText("退货表");
-        contentPane.add(button2);
-        button2.setBounds(200, 355, 100, 30);
-        button2.addActionListener(
-                (e) -> {
-                    this.setVisible(false);
-                    Sale_Return sale_return=new Sale_Return();
-                    sale_return.setVisible(true);
-                }
-        );
-
-        button3.setText("用户管理");
-        contentPane.add(button3);
-        button3.setBounds(350, 355, 100, 30);
-        button3.addActionListener(
-                (e)->{
-                    this.setVisible(false);
-                    UserControl userControl=new UserControl();
-                    userControl.setVisible(true);
                 }
         );
 
@@ -123,32 +90,28 @@ public class OrderList extends JFrame {
 
     public Object[][] getDataFromDatabase() {
 
-        List<Item> list = new ArrayList<Item>();
         Connection conn = null;
-        String user = "root";
-        String dbPassword = "wyfnb666";
-        String url = "jdbc:mysql://47.94.211.86:3306/shop?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-
-        Statement stmt = null;
-        String sql = "SELECT * FROM orderdetail";
+        PreparedStatement ps=null;
+        String sql = "SELECT * FROM user WHERE username='"+username+"'" ;
         ResultSet rs = null;
         try {
-            conn = DriverManager.getConnection(url, user, dbPassword);
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
+            conn= ConnectionHandler.getConn();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery(sql);
             while (rs.next()) {
-                Orderdetail orderDetail = new Orderdetail();
-                orderDetail.setOrderbase_id(rs.getString(1));
-                orderDetail.setItem_id(rs.getString(2));
-                orderDetail.setAmount(rs.getInt(3));
-                this.list.add(orderDetail);
+                User user=new User();
+                user.setId(rs.getString(1));
+                user.setUsername(rs.getString(2));
+                user.setPassword(rs.getString(3));
+                user.setStatus(rs.getString(4));
+                this.list.add(user);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } /*finally {
             try {
                 rs.close();
-                stmt.close();
+                ps.close();
                 conn.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -158,16 +121,17 @@ public class OrderList extends JFrame {
         data = new Object[this.list.size()][head.length];
 
         for (int i = 0; i < this.list.size(); i++) {
-            data[i][0] = this.list.get(i).getOrderbase_id();
-            data[i][1] = this.list.get(i).getItem_id();
-            data[i][2] = this.list.get(i).getAmount();
+            data[i][0] = this.list.get(i).getId();
+            data[i][1] = this.list.get(i).getUsername();
+            data[i][2] = this.list.get(i).getPassword();
+            data[i][3] = this.list.get(i).getStatus();
         }
         return data;
     }
 
     private JScrollPane scrollPane1;
     private JTable table1;
-    private String head[] = {"订单基础表", "商品id", "商品数量"};
+    private String head[] = {"用户id", "用户姓名","用户密码","职责"};
     private Object[][] data = null;
     private JButton button1;
     private JButton button2;
@@ -177,9 +141,4 @@ public class OrderList extends JFrame {
     private JTextField textField2;
     private JLabel label1;
     private JLabel label2;
-    private JLabel label3;
-
-    public static void main(String[] args) {
-        new OrderList();
-    }
 }

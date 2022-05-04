@@ -1,6 +1,8 @@
 package cn.edu.guet.WeShop.ui;
 
 import cn.edu.guet.WeShop.bean.ReturnOrderbase;
+import cn.edu.guet.WeShop.bean.User;
+import cn.edu.guet.WeShop.service.impl.UserServiceImpl;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import javax.swing.*;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
  * @liwei
  */
 public class UserControl extends JFrame {
-    java.util.List<ReturnOrderbase> list = new ArrayList<ReturnOrderbase>();
+    java.util.List<User> list = new ArrayList<User>();
     public UserControl() {
         initComponents();
     }
@@ -28,6 +30,7 @@ public class UserControl extends JFrame {
         button1 = new JButton();
         button2 = new JButton();
         button3 = new JButton();
+        button4 =new JButton();
         label1 = new JLabel();
         label2 = new JLabel();
         textField1 = new JTextField();
@@ -60,7 +63,10 @@ public class UserControl extends JFrame {
         button1.setBounds(300, 355, 100, 30);
         button1.addActionListener(
                 (e) -> {
-
+                    this.setVisible(false);
+                    String username=textField1.getText();
+                    Search_User search_user=new Search_User(username);
+                    search_user.setVisible(true);
                 }
         );
 
@@ -81,7 +87,22 @@ public class UserControl extends JFrame {
         button3.setBounds(600,355,100,30);
         button3.addActionListener(
                 (e)->{
+                    int rowNo=table1.getSelectedRow();
+                    String userName=(String)table1.getValueAt(rowNo,2);
 
+                    UserServiceImpl userService=new UserServiceImpl();
+                    userService.deleteUser(userName);
+                }
+        );
+
+        button4.setText("返回");
+        contentPane.add(button4);
+        button4.setBounds(750,355,100,30);
+        button4.addActionListener(
+                (e)->{
+                    this.setVisible(false);
+                    OrderList orderList=new OrderList();
+                    orderList.setVisible(true);
                 }
         );
 
@@ -113,23 +134,23 @@ public class UserControl extends JFrame {
 
         Connection conn = null;
         PreparedStatement ps=null;
-        String sql = "SELECT * FROM return_orderbase";
+        String sql = "SELECT * FROM user";
         ResultSet rs = null;
         try {
             conn= ConnectionHandler.getConn();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery(sql);
             while (rs.next()) {
-                ReturnOrderbase return_orderbase = new ReturnOrderbase();
-                return_orderbase.setId(rs.getString(1));
-                return_orderbase.setUser_id(rs.getString(2));
-                return_orderbase.setMoney(rs.getInt(3));
-                return_orderbase.setTime(rs.getTimestamp(4));
-                this.list.add(return_orderbase);
+                User user=new User();
+                user.setId(rs.getString(1));
+                user.setUsername(rs.getString(2));
+                user.setPassword(rs.getString(3));
+                user.setStatus(rs.getString(4));
+                this.list.add(user);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        } finally {
+        } /*finally {
             try {
                 rs.close();
                 ps.close();
@@ -137,16 +158,15 @@ public class UserControl extends JFrame {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-
-        }
+        }*/
         // 把集合的数据（商品信息）转换成二维数组
         data = new Object[this.list.size()][head.length];
 
         for (int i = 0; i < this.list.size(); i++) {
             data[i][0] = this.list.get(i).getId();
-            data[i][1] = this.list.get(i).getUser_id();
-            data[i][2] = this.list.get(i).getMoney();
-            data[i][3]=this.list.get(i).getTime();
+            data[i][1] = this.list.get(i).getUsername();
+            data[i][2] = this.list.get(i).getPassword();
+            data[i][3]=this.list.get(i).getStatus();
         }
         return data;
     }
