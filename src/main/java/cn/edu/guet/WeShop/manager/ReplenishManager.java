@@ -30,25 +30,7 @@ public class ReplenishManager {
 
 
     public void PackagingClass(double money,String user_id,String item_id,double amount,double stock){
-        /*
-                Order order = new Order();
-                String id = UUID.randomUUID().toString().replace("-", "");
-                System.out.println(id);
-                order.setId(id);//会自动生成32个字符
-                order.setMch_id(Integer.parseInt(mch_id));
-                order.setOut_trade_no(orderNo);
-                order.setOrder_time(timestamp);
-                order.setTransaction_id(transactionId);
-                order.setUserId(0);
-                order.setItem_id(11111);
-                order.setItem_price(18.00f);
-                order.setAmount(1);
-                order.setOrder_price(18.00f);
 
-                OrderService orderService = new OrderServiceImpl();
-
-                orderService.newOrder(order, item_id, item_amount);
-                */
 
         IncomingOrderbase incomingOrderbase = new IncomingOrderbase();
         String id = UUID.randomUUID().toString().replace("-", "");
@@ -75,7 +57,6 @@ public class ReplenishManager {
 
             String id1 = UUID.randomUUID().toString().replace("-", "");
             item.setId(id1);
-
             incomingOrderdetail.setItem_id(id1);
             item_stock.setItem_id(id1);
 

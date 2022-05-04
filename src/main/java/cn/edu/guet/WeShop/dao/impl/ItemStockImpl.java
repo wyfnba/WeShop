@@ -7,6 +7,7 @@ import cn.edu.guet.WeShop.util.ConnectionHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @Author Pangjiaen
@@ -18,13 +19,16 @@ public class ItemStockImpl implements ItemStockDao {
         Connection conn = null;
         try {
             conn = ConnectionHandler.getConn();
+
             String sql = "UPDATE item_stock SET stock = ? WHERE item_id = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDouble(1,item_stock.getStock());
-            pstmt.setString(2,item_stock.getItem_id());
+
+            pstmt.setDouble(1, item_stock.getStock());
+            pstmt.setString(2, item_stock.getItem_id());
 
             pstmt.executeUpdate();
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,9 +44,9 @@ public class ItemStockImpl implements ItemStockDao {
             String sql = "INSERT INTO item_stock VALUES(?,?,?)";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,item_stock.getId());
-            pstmt.setDouble(2,item_stock.getStock());
-            pstmt.setString(3,item_stock.getItem_id());
+            pstmt.setString(1, item_stock.getId());
+            pstmt.setDouble(2, item_stock.getStock());
+            pstmt.setString(3, item_stock.getItem_id());
 
             pstmt.executeUpdate();
 
@@ -57,12 +61,12 @@ public class ItemStockImpl implements ItemStockDao {
         Connection conn = null;
         try {
             conn = ConnectionHandler.getConn();
-            System.out.println("ItemStockDaoImpl："+conn.hashCode());
+            System.out.println("ItemStockDaoImpl：" + conn.hashCode());
             String sql = "UPDATE item_stock SET stock = stock-? WHERE item_id = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDouble(1,item_stock.getStock());
-            pstmt.setString(2,item_stock.getItem_id());
+            pstmt.setDouble(1, item_stock.getStock());
+            pstmt.setString(2, item_stock.getItem_id());
 
             pstmt.executeUpdate();
 

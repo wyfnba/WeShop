@@ -7,6 +7,7 @@ import cn.edu.guet.WeShop.util.ConnectionHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @Author Pangjiaen
@@ -15,18 +16,20 @@ import java.sql.SQLException;
 public class IncomingOrderDetailImpl implements IncomingOrderDetailDao {
 
     @Override
-    public void addOrderDetail(IncomingOrderdetail incomingOrderdetail) throws SQLException {
+    public void addOrderDetail(IncomingOrderdetail incomingOrderDetail) throws SQLException {
         Connection conn = null;
         try {
             conn = ConnectionHandler.getConn();
+
             String sql = "INSERT INTO incoming_orderdetail(incoming_orderbase_id,item_id,amount) VALUES(?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1,incomingOrderdetail.getIncoming_orderbase_id());
-            pstmt.setString(2,incomingOrderdetail.getItem_id());
-            pstmt.setDouble(3,incomingOrderdetail.getAmount());
+            pstmt.setString(1, incomingOrderDetail.getIncoming_orderbase_id());
+            pstmt.setString(2, incomingOrderDetail.getItem_id());
+            pstmt.setDouble(3, incomingOrderDetail.getAmount());
 
             pstmt.executeUpdate();
+
 
         } catch (SQLException e) {
             e.printStackTrace();
