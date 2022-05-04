@@ -16,24 +16,20 @@ import java.util.UUID;
  */
 public class ReplenishManager {
     boolean flag;
-    double price;
-    double stock;
+    double price = 0;
     String title;
 
-    public ReplenishManager(boolean flag,double stock){
+    public ReplenishManager(boolean flag){
         this.flag = flag;
-        this.stock = stock;
     }
 
-    public ReplenishManager(boolean flag,double stock,double price,String title){
+    public ReplenishManager(boolean flag,String title){
         this.title = title;
         this.flag = flag;
-        this.price = price;
-        this.stock = stock;
     }
 
 
-    public void PackagingClass(double money,String user_id,String item_id,double amount){
+    public void PackagingClass(double money,String user_id,String item_id,double amount,double stock){
         /*
                 Order order = new Order();
                 String id = UUID.randomUUID().toString().replace("-", "");

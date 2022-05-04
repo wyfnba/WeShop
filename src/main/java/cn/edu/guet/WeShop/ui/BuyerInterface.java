@@ -125,11 +125,6 @@ public class BuyerInterface extends JFrame {
         button4.addActionListener(
                 (e)->{
                     String title = textField1.getText();
-                    Connection conn = null;
-                    String user = "root";
-                    String dbPassword = "wyfnb666";
-                    String url = "jdbc:mysql://47.94.211.86:3306/shop?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-                    Statement stmt = null;
                     String s = " AND title='" + title + "'";
 
                     //执行并显示
@@ -177,7 +172,7 @@ public class BuyerInterface extends JFrame {
 
     public Object[][] getDataFromDatabase(String s) {
 
-        java.util.List<Item> list = new ArrayList<Item>();
+        java.util.List<Item> list = new ArrayList<>();
         java.util.List<Item_stock> list2 = new ArrayList<>();
         Connection conn = null;
         String user = "root";
@@ -192,12 +187,7 @@ public class BuyerInterface extends JFrame {
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Item item = new Item();
-                //item.setId(rs.getInt(1));
                 item.setTitle(rs.getString(1));
-                //item.setPrice(rs.getFloat(3));
-                //item.setDescription(rs.getString(4));
-                //item.setSales(rs.getInt(5));
-                //item.setImg_url(rs.getString(6));
                 Item_stock item_stock = new Item_stock();
                 item_stock.setStock(rs.getInt(2));
                 list.add(item);
@@ -214,6 +204,7 @@ public class BuyerInterface extends JFrame {
                 throwables.printStackTrace();
             }
         }
+
         // 把集合的数据（商品信息）转换成二维数组
         data = new Object[list.size()][head.length];
 
@@ -236,8 +227,4 @@ public class BuyerInterface extends JFrame {
     private JButton button4;
     private JTextField textField1;
     private JLabel label1;
-/*
-    public static void main(String[] args) {
-        new BuyerInterface(String user_id);
-    }*/
 }

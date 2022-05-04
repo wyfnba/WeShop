@@ -65,13 +65,13 @@ public class ReplenishStock extends JFrame {
         textField2.setBounds(300, 20, 130, 20);
         //textField2.setText(String.valueOf(stock));
 
-        //---- label3 ----
+        /*//---- label3 ----
         label3.setText("商品单价");
         contentPane.add(label3);
         label3.setBounds(20, 80, 55, 20);
         contentPane.add(textField3);
         textField3.setBounds(70, 80, 130, 20);
-        //textField3.setText(String.valueOf(item.getPrice()));
+        //textField3.setText(String.valueOf(item.getPrice()));*/
 
         //---- label4 ----
         label4.setText("商品总价");
@@ -103,12 +103,11 @@ public class ReplenishStock extends JFrame {
         button1.setBounds(200, 300, 100, 30);
         button1.addActionListener(
                 (e)->{
-                    ResultSet rs1 = null;
-                    Connection conn = null;
+                    ResultSet rs1;
+                    Connection conn;
                     String sql1 = "SELECT id FROM item WHERE title = ?";
                     String item_id = "";
                     double stock = 0;
-                    double price = 0;
                     double money = Double.parseDouble(textField4.getText());
                     double amount = Double.parseDouble(textField2.getText());
                     try {
@@ -129,15 +128,14 @@ public class ReplenishStock extends JFrame {
                             //如果库存表已经有该商品的记录，那就把记录替换成：库存记录=库存记录+进货量
                             if (rs1.next())stock = rs1.getInt(1)+amount;
 
-                            replenishManager = new ReplenishManager(false,stock);//false表示商品表不用新增商品
+                            replenishManager = new ReplenishManager(false);//false表示商品表不用新增商品
                         }else{
                             item_id = UUID.randomUUID().toString().replace("-", "");
-                            price = Double.parseDouble(textField3.getText());
                             stock = amount;//如果还没有该商品，则进货量即为库存量
                             title = textField1.getText();
-                            replenishManager = new ReplenishManager(true,stock,price,title);
+                            replenishManager = new ReplenishManager(true,title);
                         }
-                        replenishManager.PackagingClass(money,user_id,item_id,amount);
+                        replenishManager.PackagingClass(money,user_id,item_id,amount,stock);
 
                     } catch (SQLException ex) {
                         ex.printStackTrace();
