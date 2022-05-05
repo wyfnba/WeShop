@@ -4,6 +4,7 @@ import cn.edu.guet.WeShop.bean.IncomingOrderdetail;
 import cn.edu.guet.WeShop.bean.Orderdetail;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @Author Pangjiaen
@@ -14,5 +15,5 @@ import java.sql.SQLException;
  * 这是进货时对细节表的更新接口
  */
 public interface IncomingOrderDetailDao {
-    void addOrderDetail(IncomingOrderdetail incomingOrderdetail) throws SQLException;
+    void addOrderDetail(List<IncomingOrderdetail> incomingOrderDetail) throws SQLException;
 }

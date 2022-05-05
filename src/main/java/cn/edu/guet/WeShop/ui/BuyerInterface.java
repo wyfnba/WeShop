@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -44,7 +45,7 @@ public class BuyerInterface extends JFrame {
         contentPane.add(label1);
         label1.setBounds(460, 0, 600, 60);
 
-        button1.setText("退货");
+        /*button1.setText("退货");
         contentPane.add(button1);
         button1.setBounds(510, 355, 100, 30);
         button1.addActionListener(
@@ -60,20 +61,21 @@ public class BuyerInterface extends JFrame {
                         sr.setVisible(true);
                     }
                 }
-        );
+        );*/
 
         button2.setText("进货");
         contentPane.add(button2);
         button2.setBounds(610, 355, 100, 30);
         button2.addActionListener(
                 (e)->{
+                    List<String> list = randomNumber();
                     int rowNo = table1.getSelectedRow();//获取所选的行号
                     if (rowNo != -1){
                         String title = (String) table1.getValueAt(rowNo,0);
-                        ReplenishStock rs = new ReplenishStock(title,user_id);
+                        ReplenishStock rs = new ReplenishStock(title,user_id,list);//list表示本次进货最多只能进50个商品
                         rs.setVisible(true);
                     }else{
-                        ReplenishStock rs = new ReplenishStock(user_id);
+                        ReplenishStock rs = new ReplenishStock(user_id,list);
                         rs.setVisible(true);
                     }
                 }
@@ -125,11 +127,6 @@ public class BuyerInterface extends JFrame {
         button4.addActionListener(
                 (e)->{
                     String title = textField1.getText();
-                    Connection conn = null;
-                    String user = "root";
-                    String dbPassword = "wyfnb666";
-                    String url = "jdbc:mysql://47.94.211.86:3306/shop?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-                    Statement stmt = null;
                     String s = " AND title='" + title + "'";
 
                     //执行并显示
@@ -175,9 +172,26 @@ public class BuyerInterface extends JFrame {
             };
     }
 
+    //随机生成50个不重复的数字
+    private List<String> randomNumber(){
+        List<String> list = new ArrayList<>();
+        String number;
+        for(int i = 0 ; i < 50 ; i++){
+            while(true){
+                number = String.valueOf((int)(Math.random()*76));
+                if(!list.contains(number)){
+                    //如果不包含该值
+                    list.add(number);
+                    break;
+                }
+            }
+        }
+        return list;
+    }
+
     public Object[][] getDataFromDatabase(String s) {
 
-        java.util.List<Item> list = new ArrayList<Item>();
+        java.util.List<Item> list = new ArrayList<>();
         java.util.List<Item_stock> list2 = new ArrayList<>();
         Connection conn = null;
         String user = "root";
@@ -192,12 +206,7 @@ public class BuyerInterface extends JFrame {
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Item item = new Item();
-                //item.setId(rs.getInt(1));
                 item.setTitle(rs.getString(1));
-                //item.setPrice(rs.getFloat(3));
-                //item.setDescription(rs.getString(4));
-                //item.setSales(rs.getInt(5));
-                //item.setImg_url(rs.getString(6));
                 Item_stock item_stock = new Item_stock();
                 item_stock.setStock(rs.getInt(2));
                 list.add(item);
@@ -214,6 +223,7 @@ public class BuyerInterface extends JFrame {
                 throwables.printStackTrace();
             }
         }
+
         // 把集合的数据（商品信息）转换成二维数组
         data = new Object[list.size()][head.length];
 
@@ -236,8 +246,4 @@ public class BuyerInterface extends JFrame {
     private JButton button4;
     private JTextField textField1;
     private JLabel label1;
-/*
-    public static void main(String[] args) {
-        new BuyerInterface(String user_id);
-    }*/
 }
