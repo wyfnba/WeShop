@@ -52,7 +52,7 @@ public class Search_Return extends JFrame {
 
         button1.setText("返回");
         contentPane.add(button1);
-        button1.setBounds(500,355,100,30);
+        button1.setBounds(450,355,100,30);
         button1.addActionListener(
                 (e) -> {
                     this.setVisible(false);
@@ -81,7 +81,7 @@ public class Search_Return extends JFrame {
         }
         pack();
         setLocationRelativeTo(getOwner());
-        this.setBounds(300, 300, 1000, 415);
+        this.setBounds(300, 300, 1000, 450);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 

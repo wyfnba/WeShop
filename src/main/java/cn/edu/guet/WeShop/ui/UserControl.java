@@ -59,7 +59,7 @@ public class UserControl extends JFrame {
         contentPane.setLayout(null);
 
         label1.setFont(new Font("STHeiti Light", Font.BOLD, 30));
-        label1.setText("普通用户");
+        label1.setText("职员表");
         contentPane.add(label1);
         label1.setBounds(460, 0, 600, 60);
 
@@ -105,7 +105,7 @@ public class UserControl extends JFrame {
                         Message message=new Message();
                         message.setVisible(true);
                     }else{
-                        String userName=(String)table1.getValueAt(rowNo,2);
+                        String userName=(String)table1.getValueAt(rowNo,1);
                         UserServiceImpl userService=new UserServiceImpl();
                         userService.deleteUser(userName);
                     }
@@ -157,7 +157,7 @@ public class UserControl extends JFrame {
         }
         pack();
         setLocationRelativeTo(getOwner());
-        this.setBounds(300, 300, 1000, 415);
+        this.setBounds(300, 300, 1000, 450);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
@@ -165,7 +165,7 @@ public class UserControl extends JFrame {
         java.util.List<User> list = new ArrayList<User>();
         Connection conn = null;
         PreparedStatement ps=null;
-        String sql = "SELECT u.username,u.password,u.status FROM user u";
+        String sql = "SELECT u.username,u.status FROM user u";
         ResultSet rs = null;
         try {
             conn= ConnectionHandler.getConn();
@@ -174,8 +174,7 @@ public class UserControl extends JFrame {
             while (rs.next()) {
                 User user=new User();
                 user.setUsername(rs.getString(1));
-                user.setPassword(rs.getString(2));
-                user.setStatus(rs.getString(3));
+                user.setStatus(rs.getString(2));
                 list.add(user);
             }
         } catch (SQLException throwables) {
@@ -194,8 +193,7 @@ public class UserControl extends JFrame {
 
         for (int i = 0; i < list.size(); i++) {
             data[i][0] = list.get(i).getUsername();
-            data[i][1] = list.get(i).getPassword();
-            data[i][2] = list.get(i).getStatus();
+            data[i][1] = list.get(i).getStatus();
         }
         return data;
     }
@@ -204,7 +202,7 @@ public class UserControl extends JFrame {
     private JScrollPane scrollPane2;
     private JTable table1;
     private JTable table2;
-    private String head[] = {"经手人姓名", "密码","职称"};
+    private String head[] = {"账号", "职称"};
     private Object[][] data = null;
     private JButton button1;
     private JButton button2;
