@@ -1,7 +1,7 @@
 package cn.edu.guet.WeShop.ui;
 
 import cn.edu.guet.WeShop.TableSearch.SumMoney;
-import cn.edu.guet.WeShop.TableSearch.Username_Incoming;
+import cn.edu.guet.WeShop.TableSearch.User_Incoming;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * @liwei
  */
 public class Sale_Stock extends JFrame {
-    java.util.List<Username_Incoming> list = new ArrayList<Username_Incoming>();
+    java.util.List<User_Incoming> list = new ArrayList<User_Incoming>();
     public Sale_Stock() {
         initComponents();
     }
@@ -54,24 +54,25 @@ public class Sale_Stock extends JFrame {
 
         label2.setText("经手人姓名：");
         contentPane.add(label2);
-        label2.setBounds(20, 355, 70, 30);
+        label2.setBounds(20, 355, 100, 30);
         contentPane.add(textField1);
         textField1.setBounds(100, 355, 130, 30);
 
         label3.setFont(new Font("宋体",Font.BOLD,15));
         label3.setText("出账金额：");
         contentPane.add(label3);
-        label3.setBounds(400,320,100,30);
+        label3.setBounds(400,355,80,30);
+
         Double money;
         SumMoney sumMoney=new SumMoney();
         money=sumMoney.IncomingMoney();
         label4.setText(String.valueOf(money));
         contentPane.add(label4);
-        label4.setBounds(510,320,100,30);
+        label4.setBounds(500,355,100,30);
 
         button1.setText("查询");
         contentPane.add(button1);
-        button1.setBounds(300, 355, 100, 30);
+        button1.setBounds(250, 355, 100, 30);
         button1.addActionListener(
                 (e) -> {
                     this.setVisible(false);
@@ -84,7 +85,7 @@ public class Sale_Stock extends JFrame {
 
         button2.setText("返回");
         contentPane.add(button2);
-        button2.setBounds(500,355,100,30);
+        button2.setBounds(800,355,100,30);
         button2.addActionListener(
                 (e) -> {
                     this.setVisible(false);
@@ -131,7 +132,7 @@ public class Sale_Stock extends JFrame {
             ps=conn.prepareStatement(sql);
             rs = ps.executeQuery(sql);
             while (rs.next()) {
-                Username_Incoming username_incoming=new Username_Incoming();
+                User_Incoming username_incoming=new User_Incoming();
                 username_incoming.setUsername(rs.getString(1));
                 username_incoming.setMoney(rs.getDouble(2));
                 username_incoming.setTime(rs.getTimestamp(3));

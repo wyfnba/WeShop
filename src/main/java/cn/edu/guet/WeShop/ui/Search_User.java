@@ -1,8 +1,5 @@
 package cn.edu.guet.WeShop.ui;
 
-import cn.edu.guet.WeShop.TableSearch.Username_Incoming;
-import cn.edu.guet.WeShop.bean.IncomingOrderbase;
-import cn.edu.guet.WeShop.bean.ReturnOrderbase;
 import cn.edu.guet.WeShop.bean.User;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
@@ -59,8 +56,8 @@ public class Search_User extends JFrame {
         button1.addActionListener(
                 (e) -> {
                     this.setVisible(false);
-                    Sale_Stock sale_stock=new Sale_Stock();
-                    sale_stock.setVisible(true);
+                    UserControl userControl=new UserControl();
+                    userControl.setVisible(true);
                 }
         );
 

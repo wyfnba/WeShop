@@ -1,8 +1,10 @@
 package cn.edu.guet.WeShop.ui;
 
 import cn.edu.guet.WeShop.TableSearch.SumMoney;
+import cn.edu.guet.WeShop.TableSearch.User_Orderbase;
 import cn.edu.guet.WeShop.bean.Item;
 import cn.edu.guet.WeShop.bean.Orderdetail;
+import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,19 +18,17 @@ import java.util.List;
  * @liwei
  */
 public class OrderList extends JFrame {
-    List<Orderdetail> list = new ArrayList<Orderdetail>();
     public OrderList() {
         initComponents();
     }
 
     private void initComponents() {
-        List<Orderdetail> listc = new ArrayList<>();
-        List<String> amount = new ArrayList<>();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
         button1 = new JButton();
         button2 = new JButton();
         button3 = new JButton();
+        button4=new JButton();
         label1 = new JLabel();
         label2=new JLabel();
         label3=new JLabel();
@@ -56,12 +56,12 @@ public class OrderList extends JFrame {
         Double Sum=IncomingMoney-ReturnMoney;
         label2.setText(String.valueOf(Sum));
         contentPane.add(label2);
-        label2.setBounds(510,320,100,30);
+        label2.setBounds(600,355,100,30);
 
         label3.setFont(new Font("宋体",Font.BOLD,15));
         label3.setText("总收益：");
         contentPane.add(label3);
-        label3.setBounds(400,320,100,30);
+        label3.setBounds(500,355,70,30);
 
         button1.setText("进货表");
         contentPane.add(button1);
@@ -77,7 +77,7 @@ public class OrderList extends JFrame {
 
         button2.setText("退货表");
         contentPane.add(button2);
-        button2.setBounds(200, 355, 100, 30);
+        button2.setBounds(120, 355, 100, 30);
         button2.addActionListener(
                 (e) -> {
                     this.setVisible(false);
@@ -88,12 +88,27 @@ public class OrderList extends JFrame {
 
         button3.setText("用户管理");
         contentPane.add(button3);
-        button3.setBounds(350, 355, 100, 30);
+        button3.setBounds(250, 355, 100, 30);
         button3.addActionListener(
                 (e)->{
                     this.setVisible(false);
                     UserControl userControl=new UserControl();
                     userControl.setVisible(true);
+                }
+        );
+
+        button4.setText("刷新");
+        contentPane.add(button4);
+        button4.setBounds(800,355,100,30);
+        button4.addActionListener(
+                (e)->{
+                    DefaultTableModel Refresh_tableModel = new DefaultTableModel(getDataFromDatabase(), head) {
+                        public boolean isCellEditable(int row, int column) {
+                            return false;
+                        }
+                    };
+                    table1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                    table1.setModel(Refresh_tableModel);
                 }
         );
 
@@ -122,26 +137,24 @@ public class OrderList extends JFrame {
     }
 
     public Object[][] getDataFromDatabase() {
-
-        List<Item> list = new ArrayList<Item>();
+        List<User_Orderbase> list = new ArrayList<User_Orderbase>();
         Connection conn = null;
-        String user = "root";
-        String dbPassword = "wyfnb666";
-        String url = "jdbc:mysql://47.94.211.86:3306/shop?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-
         Statement stmt = null;
-        String sql = "SELECT * FROM orderdetail";
+        String sql = "SELECT u.username,u.`status`,o.order_price,o.time_end\n" +
+                "FROM user u,orderbase o\n" +
+                "WHERE u.id=o.user_id";
         ResultSet rs = null;
         try {
-            conn = DriverManager.getConnection(url, user, dbPassword);
+            conn = ConnectionHandler.getConn();
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                Orderdetail orderDetail = new Orderdetail();
-                orderDetail.setOrderbase_id(rs.getString(1));
-                orderDetail.setItem_id(rs.getString(2));
-                orderDetail.setAmount(rs.getInt(3));
-                this.list.add(orderDetail);
+                User_Orderbase user_orderbase=new User_Orderbase();
+                user_orderbase.setUserName(rs.getString(1));
+                user_orderbase.setStatus(rs.getString(2));
+                user_orderbase.setPrice(rs.getDouble(3));
+                user_orderbase.setTime(rs.getTimestamp(4));
+                list.add(user_orderbase);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -155,19 +168,20 @@ public class OrderList extends JFrame {
             }
         }*/
         // 把集合的数据（商品信息）转换成二维数组
-        data = new Object[this.list.size()][head.length];
+        data = new Object[list.size()][head.length];
 
-        for (int i = 0; i < this.list.size(); i++) {
-            data[i][0] = this.list.get(i).getOrderbase_id();
-            data[i][1] = this.list.get(i).getItem_id();
-            data[i][2] = this.list.get(i).getAmount();
+        for (int i = 0; i < list.size(); i++) {
+            data[i][0] = list.get(i).getUserName();
+            data[i][1] = list.get(i).getStatus();
+            data[i][2] = list.get(i).getPrice();
+            data[i][3] = list.get(i).getTime();
         }
         return data;
     }
 
     private JScrollPane scrollPane1;
     private JTable table1;
-    private String head[] = {"订单基础表", "商品id", "商品数量"};
+    private String head[] = {"经手人姓名", "职称", "交易金额","交易时间"};
     private Object[][] data = null;
     private JButton button1;
     private JButton button2;
