@@ -20,7 +20,7 @@ public class ItemStockImpl implements ItemStockDao {
         try {
             conn = ConnectionHandler.getConn();
 
-            String sql = "UPDATE item_stock SET stock = ? WHERE item_id = ?";
+            String sql = "UPDATE item_stock SET stock = stock+? WHERE item_id = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 

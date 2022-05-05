@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -44,7 +45,7 @@ public class BuyerInterface extends JFrame {
         contentPane.add(label1);
         label1.setBounds(460, 0, 600, 60);
 
-        button1.setText("退货");
+        /*button1.setText("退货");
         contentPane.add(button1);
         button1.setBounds(510, 355, 100, 30);
         button1.addActionListener(
@@ -60,20 +61,21 @@ public class BuyerInterface extends JFrame {
                         sr.setVisible(true);
                     }
                 }
-        );
+        );*/
 
         button2.setText("进货");
         contentPane.add(button2);
         button2.setBounds(610, 355, 100, 30);
         button2.addActionListener(
                 (e)->{
+                    List<String> list = randomNumber();
                     int rowNo = table1.getSelectedRow();//获取所选的行号
                     if (rowNo != -1){
                         String title = (String) table1.getValueAt(rowNo,0);
-                        ReplenishStock rs = new ReplenishStock(title,user_id);
+                        ReplenishStock rs = new ReplenishStock(title,user_id,list);//list表示本次进货最多只能进50个商品
                         rs.setVisible(true);
                     }else{
-                        ReplenishStock rs = new ReplenishStock(user_id);
+                        ReplenishStock rs = new ReplenishStock(user_id,list);
                         rs.setVisible(true);
                     }
                 }
@@ -168,6 +170,23 @@ public class BuyerInterface extends JFrame {
                     return false;
                 }
             };
+    }
+
+    //随机生成50个不重复的数字
+    private List<String> randomNumber(){
+        List<String> list = new ArrayList<>();
+        String number;
+        for(int i = 0 ; i < 50 ; i++){
+            while(true){
+                number = String.valueOf((int)(Math.random()*76));
+                if(!list.contains(number)){
+                    //如果不包含该值
+                    list.add(number);
+                    break;
+                }
+            }
+        }
+        return list;
     }
 
     public Object[][] getDataFromDatabase(String s) {
