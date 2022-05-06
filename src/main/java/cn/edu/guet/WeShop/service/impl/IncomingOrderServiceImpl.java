@@ -17,7 +17,9 @@ import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author Pangjiaen
@@ -25,8 +27,18 @@ import java.util.List;
  */
 public class IncomingOrderServiceImpl implements IncomingOrderService {
     Connection conn = null;
+    IncomingOrderbase incomingOrderbase;
+
+    public IncomingOrderServiceImpl(){
+
+    }
+
+    public IncomingOrderServiceImpl(IncomingOrderbase incomingOrderbase){
+        this.incomingOrderbase = incomingOrderbase;
+    }
+
     @Override
-    public void newIncomingOrderCaseOne(List<IncomingOrderdetail> incomingOrderDetail, IncomingOrderbase incomingOrderbase, List<Item_stock> item_stocks) {
+    public void newIncomingOrderCaseOne(List<IncomingOrderdetail> incomingOrderDetail, List<Item_stock> item_stocks) {
 
 
         try {
@@ -40,10 +52,16 @@ public class IncomingOrderServiceImpl implements IncomingOrderService {
 
             replenishStockBaseDao.addOrderBase(incomingOrderbase);
 
-            replenishStockDetailDao.addOrderDetail(incomingOrderDetail);
-            increaseItemStockDao.increaseItemStock(item_stocks);
+            for (int i = 0 ; i < incomingOrderDetail.size() ; i++){
+                replenishStockDetailDao.addOrderDetail(incomingOrderDetail.get(i));
+            }
+            for (int i = 0 ; i < item_stocks.size() ; i++){
+                increaseItemStockDao.increaseItemStock(item_stocks.get(i));
+            }
+
 
             conn.commit();
+
         } catch (SQLException e) {
             e.printStackTrace();
             try {
@@ -62,7 +80,7 @@ public class IncomingOrderServiceImpl implements IncomingOrderService {
     }
 
     @Override
-    public void newIncomingOrderCaseTwo(List<IncomingOrderdetail> incomingOrderDetail, IncomingOrderbase incomingOrderbase, List<Item_stock> item_stocks, List<Item> items) {
+    public void newIncomingOrderCaseTwo(List<IncomingOrderdetail> incomingOrderDetail, HashMap<String,Item_stock> item_stock, List<Item> item) {
 
         try {
             IncomingOrderBaseDao replenishStockBaseDao = new IncomingOrderBaseImpl();
@@ -74,11 +92,23 @@ public class IncomingOrderServiceImpl implements IncomingOrderService {
 
             conn.setAutoCommit(false);
 
-            addItemDao.AddItem(items);
             replenishStockBaseDao.addOrderBase(incomingOrderbase);
-            replenishStockDetailDao.addOrderDetail(incomingOrderDetail);
-            increaseItemStockDao.increaseItemStock(item_stocks);
 
+            for (int i = 0 ; i < item.size() ; i++){
+                addItemDao.AddItem(item.get(i));
+            }
+            for (int i = 0 ; i < incomingOrderDetail.size() ; i++){
+                replenishStockDetailDao.addOrderDetail(incomingOrderDetail.get(i));
+            }
+
+            Set<String> keySet = item_stock.keySet();
+            for (String s : keySet){
+                if (s.contains("yes")){
+                    increaseItemStockDao.insertItemStock(item_stock.get(s));
+                }else{
+                    increaseItemStockDao.increaseItemStock(item_stock.get(s));
+                }
+            }
 
             conn.commit();
         } catch (SQLException e) {
