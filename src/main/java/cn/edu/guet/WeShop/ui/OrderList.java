@@ -132,7 +132,7 @@ public class OrderList extends JFrame {
         }
         pack();
         setLocationRelativeTo(getOwner());
-        this.setBounds(300, 300, 1000, 415);
+        this.setBounds(300, 300, 1000, 450);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 

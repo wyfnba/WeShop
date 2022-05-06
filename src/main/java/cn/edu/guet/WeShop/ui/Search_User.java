@@ -52,7 +52,7 @@ public class Search_User extends JFrame {
 
         button1.setText("返回");
         contentPane.add(button1);
-        button1.setBounds(500,355,100,30);
+        button1.setBounds(450,355,100,30);
         button1.addActionListener(
                 (e) -> {
                     this.setVisible(false);
@@ -81,7 +81,7 @@ public class Search_User extends JFrame {
         }
         pack();
         setLocationRelativeTo(getOwner());
-        this.setBounds(300, 300, 1000, 415);
+        this.setBounds(300, 300, 1000, 450);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
@@ -89,7 +89,7 @@ public class Search_User extends JFrame {
 
         Connection conn = null;
         PreparedStatement ps=null;
-        String sql = "SELECT * FROM user WHERE username='"+username+"'" ;
+        String sql = "SELECT username,status FROM user u WHERE username='"+username+"'" ;
         ResultSet rs = null;
         try {
             conn= ConnectionHandler.getConn();
@@ -97,10 +97,8 @@ public class Search_User extends JFrame {
             rs = ps.executeQuery(sql);
             while (rs.next()) {
                 User user=new User();
-                user.setId(rs.getString(1));
-                user.setUsername(rs.getString(2));
-                user.setPassword(rs.getString(3));
-                user.setStatus(rs.getString(4));
+                user.setUsername(rs.getString(1));
+                user.setStatus(rs.getString(2));
                 this.list.add(user);
             }
         } catch (SQLException throwables) {
@@ -118,17 +116,15 @@ public class Search_User extends JFrame {
         data = new Object[this.list.size()][head.length];
 
         for (int i = 0; i < this.list.size(); i++) {
-            data[i][0] = this.list.get(i).getId();
-            data[i][1] = this.list.get(i).getUsername();
-            data[i][2] = this.list.get(i).getPassword();
-            data[i][3] = this.list.get(i).getStatus();
+            data[i][0] = this.list.get(i).getUsername();
+            data[i][1] = this.list.get(i).getStatus();
         }
         return data;
     }
 
     private JScrollPane scrollPane1;
     private JTable table1;
-    private String head[] = {"用户id", "用户姓名","用户密码","职责"};
+    private String head[] = {"用户姓名","职位"};
     private Object[][] data = null;
     private JButton button1;
     private JButton button2;
