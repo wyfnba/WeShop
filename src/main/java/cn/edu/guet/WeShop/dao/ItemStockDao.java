@@ -15,4 +15,5 @@ import java.util.List;
  */
 public interface ItemStockDao {
     void increaseItemStock(List<Item_stock> item_stock) throws SQLException;
+    void decreaseItemStock(Item_stock item_stock) throws SQLException;
 }
