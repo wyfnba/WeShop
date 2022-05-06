@@ -1,6 +1,8 @@
 package cn.edu.guet.WeShop.ui;
 
 import cn.edu.guet.WeShop.bean.ReturnOrderbase;
+import cn.edu.guet.WeShop.bean.User;
+import cn.edu.guet.WeShop.service.impl.UserServiceImpl;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import javax.swing.*;
@@ -17,26 +19,39 @@ import java.util.ArrayList;
  * @liwei
  */
 public class UserControl extends JFrame {
-    java.util.List<ReturnOrderbase> list = new ArrayList<ReturnOrderbase>();
+
     public UserControl() {
         initComponents();
     }
-
-    private void initComponents() {
-        scrollPane1 = new JScrollPane();
-        table1 = new JTable();
-        button1 = new JButton();
-        button2 = new JButton();
-        button3 = new JButton();
-        label1 = new JLabel();
-        label2 = new JLabel();
-        textField1 = new JTextField();
-
-        DefaultTableModel tableModel = new DefaultTableModel(getDataFromDatabase(), head) {
+    private DefaultTableModel getDefaultTableModel() {
+        return new DefaultTableModel(getDataFromDatabase(), head) {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
+    }
+
+    private void initComponents() {
+        scrollPane1 = new JScrollPane();
+        scrollPane2=new JScrollPane();
+        table1 = new JTable();
+        table2=new JTable();
+        button1 = new JButton();
+        button2 = new JButton();
+        button3 = new JButton();
+        button4 =new JButton();
+        button5=new JButton();
+        label1 = new JLabel();
+        label2 = new JLabel();
+        textField1 = new JTextField();
+
+        /*DefaultTableModel tableModel = new DefaultTableModel(getDataFromDatabase(), head) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };*/
+
+        DefaultTableModel tableModel = getDefaultTableModel();
         table1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         table1.setModel(tableModel);
 
@@ -44,7 +59,7 @@ public class UserControl extends JFrame {
         contentPane.setLayout(null);
 
         label1.setFont(new Font("STHeiti Light", Font.BOLD, 30));
-        label1.setText("普通用户");
+        label1.setText("职员表");
         contentPane.add(label1);
         label1.setBounds(460, 0, 600, 60);
 
@@ -57,10 +72,13 @@ public class UserControl extends JFrame {
 
         button1.setText("查询");
         contentPane.add(button1);
-        button1.setBounds(300, 355, 100, 30);
+        button1.setBounds(250, 355, 100, 30);
         button1.addActionListener(
                 (e) -> {
-
+                    this.setVisible(false);
+                    String username=textField1.getText();
+                    Search_User search_user=new Search_User(username);
+                    search_user.setVisible(true);
                 }
         );
 
@@ -81,13 +99,47 @@ public class UserControl extends JFrame {
         button3.setBounds(600,355,100,30);
         button3.addActionListener(
                 (e)->{
-
+                    int rowNo=table1.getSelectedRow();
+                    if(rowNo==-1){
+                        this.setVisible(false);
+                        Message message=new Message();
+                        message.setVisible(true);
+                    }else{
+                        String userName=(String)table1.getValueAt(rowNo,1);
+                        UserServiceImpl userService=new UserServiceImpl();
+                        userService.deleteUser(userName);
+                    }
                 }
         );
 
-        {
-            scrollPane1.setViewportView(table1);
-        }
+        button4.setText("返回");
+        contentPane.add(button4);
+        button4.setBounds(700,355,100,30);
+        button4.addActionListener(
+                (e)->{
+                    this.setVisible(false);
+                    OrderList orderList=new OrderList();
+                    orderList.setVisible(true);
+                }
+        );
+
+        button5.setText("刷新");
+        contentPane.add(button5);
+        button5.setBounds(850,355,80,30);
+        button5.addActionListener(
+                (e)->{
+                    DefaultTableModel Refresh_tableModel = new DefaultTableModel(getDataFromDatabase(), head) {
+                        public boolean isCellEditable(int row, int column) {
+                            return false;
+                        }
+                    };
+                    table1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                    table1.setModel(Refresh_tableModel);
+                }
+        );
+
+
+        scrollPane1.setViewportView(table1);
         contentPane.add(scrollPane1);
         scrollPane1.setBounds(0, 50, 1000, 300);
         {
@@ -105,31 +157,29 @@ public class UserControl extends JFrame {
         }
         pack();
         setLocationRelativeTo(getOwner());
-        this.setBounds(300, 300, 1000, 415);
+        this.setBounds(300, 300, 1000, 450);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public Object[][] getDataFromDatabase() {
-
+        java.util.List<User> list = new ArrayList<User>();
         Connection conn = null;
         PreparedStatement ps=null;
-        String sql = "SELECT * FROM return_orderbase";
+        String sql = "SELECT u.username,u.status FROM user u";
         ResultSet rs = null;
         try {
             conn= ConnectionHandler.getConn();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery(sql);
             while (rs.next()) {
-                ReturnOrderbase return_orderbase = new ReturnOrderbase();
-                return_orderbase.setId(rs.getString(1));
-                return_orderbase.setUser_id(rs.getString(2));
-                return_orderbase.setMoney(rs.getInt(3));
-                return_orderbase.setTime(rs.getTimestamp(4));
-                this.list.add(return_orderbase);
+                User user=new User();
+                user.setUsername(rs.getString(1));
+                user.setStatus(rs.getString(2));
+                list.add(user);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        } finally {
+        } /*finally {
             try {
                 rs.close();
                 ps.close();
@@ -137,28 +187,28 @@ public class UserControl extends JFrame {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-
-        }
+        }*/
         // 把集合的数据（商品信息）转换成二维数组
-        data = new Object[this.list.size()][head.length];
+        data = new Object[list.size()][head.length];
 
-        for (int i = 0; i < this.list.size(); i++) {
-            data[i][0] = this.list.get(i).getId();
-            data[i][1] = this.list.get(i).getUser_id();
-            data[i][2] = this.list.get(i).getMoney();
-            data[i][3]=this.list.get(i).getTime();
+        for (int i = 0; i < list.size(); i++) {
+            data[i][0] = list.get(i).getUsername();
+            data[i][1] = list.get(i).getStatus();
         }
         return data;
     }
 
     private JScrollPane scrollPane1;
+    private JScrollPane scrollPane2;
     private JTable table1;
-    private String head[] = {"商品id", "经手人id", "入账金额","交易时间"};
+    private JTable table2;
+    private String head[] = {"账号", "职称"};
     private Object[][] data = null;
     private JButton button1;
     private JButton button2;
     private JButton button3;
     private JButton button4;
+    private JButton button5;
     private JTextField textField1;
     private JTextField textField2;
     private JLabel label1;

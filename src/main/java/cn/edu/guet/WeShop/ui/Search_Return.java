@@ -1,6 +1,5 @@
 package cn.edu.guet.WeShop.ui;
 
-import cn.edu.guet.WeShop.TableSearch.SumMoney;
 import cn.edu.guet.WeShop.TableSearch.User_Return;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
@@ -17,9 +16,11 @@ import java.util.ArrayList;
 /**
  * @liwei
  */
-public class Sale_Return extends JFrame {
+public class Search_Return extends JFrame {
     java.util.List<User_Return> list = new ArrayList<User_Return>();
-    public Sale_Return() {
+    String username;
+    public Search_Return(String username) {
+        this.username=username;
         initComponents();
     }
 
@@ -31,8 +32,6 @@ public class Sale_Return extends JFrame {
         button3 = new JButton();
         label1 = new JLabel();
         label2 = new JLabel();
-        label3=new JLabel();
-        label4=new JLabel();
         textField1 = new JTextField();
 
         DefaultTableModel tableModel = new DefaultTableModel(getDataFromDatabase(), head) {
@@ -47,49 +46,18 @@ public class Sale_Return extends JFrame {
         contentPane.setLayout(null);
 
         label1.setFont(new Font("STHeiti Light", Font.BOLD, 30));
-        label1.setText("退货表");
+        label1.setText("查询结果");
         contentPane.add(label1);
         label1.setBounds(460, 0, 600, 60);
 
-        label2.setText("经手人姓名：");
-        contentPane.add(label2);
-        label2.setBounds(20, 355, 100, 30);
-        contentPane.add(textField1);
-        textField1.setBounds(100, 355, 130, 30);
-
-        label3.setFont(new Font("宋体",Font.BOLD,15));
-        label3.setText("入账金额：");
-        contentPane.add(label3);
-        label3.setBounds(400,355,80,30);
-
-        Double money;
-        SumMoney sumMoney=new SumMoney();
-        money=sumMoney.ReturnMoney();
-        label4.setText(String.valueOf(money));
-        contentPane.add(label4);
-        label4.setBounds(500,355,100,30);
-
-        button1.setText("查询");
+        button1.setText("返回");
         contentPane.add(button1);
-        button1.setBounds(250, 355, 100, 30);
+        button1.setBounds(450,355,100,30);
         button1.addActionListener(
                 (e) -> {
                     this.setVisible(false);
-                    String textField1Text=textField1.getText();
-                    Search_Return search=new Search_Return(textField1Text);
-                    search.setVisible(true);
-                }
-        );
-
-
-        button2.setText("返回");
-        contentPane.add(button2);
-        button2.setBounds(800,355,100,30);
-        button2.addActionListener(
-                (e) -> {
-                    this.setVisible(false);
-                    OrderList orderList=new OrderList();
-                    orderList.setVisible(true);
+                    Sale_Return sale_return=new Sale_Return();
+                    sale_return.setVisible(true);
                 }
         );
 
@@ -121,17 +89,17 @@ public class Sale_Return extends JFrame {
 
         Connection conn = null;
         PreparedStatement ps=null;
-        String sql = "SELECT u.username,r.money,r.time\n" +
-                "FROM user u,return_orderbase r\n" +
-                "WHERE u.id=r.user_id \n" +
-                "GROUP BY r.id";
+        String sql = "SELECT u.username,r.money,r.time \n" +
+                     "FROM user u,return_orderbase r \n" +
+                     "WHERE u.id=r.user_id and u.username='"+username+"'";
         ResultSet rs = null;
         try {
             conn= ConnectionHandler.getConn();
             ps = conn.prepareStatement(sql);
+            //ps.setString(1,username);
             rs = ps.executeQuery(sql);
             while (rs.next()) {
-                User_Return username_return = new User_Return();
+                User_Return username_return=new User_Return();
                 username_return.setUsername(rs.getString(1));
                 username_return.setMoney(rs.getDouble(2));
                 username_return.setTime(rs.getTimestamp(3));
@@ -171,6 +139,4 @@ public class Sale_Return extends JFrame {
     private JTextField textField2;
     private JLabel label1;
     private JLabel label2;
-    private JLabel label3;
-    private JLabel label4;
 }

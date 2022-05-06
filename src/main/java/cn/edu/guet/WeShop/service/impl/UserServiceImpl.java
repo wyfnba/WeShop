@@ -11,12 +11,12 @@ import java.sql.SQLException;
 
 
 public class UserServiceImpl implements UserService {
-
+    Connection conn=null;
     public void addUser(User user){
-        Connection conn=null;
         try {
             Userdao addUser=new UserdaoImpl();
-            conn= ConnectionHandler.getConn();
+
+            conn=ConnectionHandler.getConn();
 
             conn.setAutoCommit(false);
             addUser.AddUser(user);
@@ -40,14 +40,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(User user) {
-        Connection conn=null;
+    public void deleteUser(String username) {
         try {
             Userdao deleteUser=new UserdaoImpl();
-            conn= ConnectionHandler.getConn();
+            conn=ConnectionHandler.getConn();
 
             conn.setAutoCommit(false);
-            deleteUser.DeleteUser(user.getUsername());
+            deleteUser.DeleteUser(username);
             conn.commit();
 
         } catch (SQLException e) {
