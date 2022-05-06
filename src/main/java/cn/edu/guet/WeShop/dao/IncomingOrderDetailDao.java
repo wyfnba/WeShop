@@ -15,5 +15,5 @@ import java.util.List;
  * 这是进货时对细节表的更新接口
  */
 public interface IncomingOrderDetailDao {
-    void addOrderDetail(List<IncomingOrderdetail> incomingOrderDetail) throws SQLException;
+    void addOrderDetail(IncomingOrderdetail incomingOrderDetail) throws SQLException;
 }

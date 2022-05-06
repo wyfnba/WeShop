@@ -191,8 +191,8 @@ public class BuyerInterface extends JFrame {
 
     public Object[][] getDataFromDatabase(String s) {
 
-        java.util.List<Item> list = new ArrayList<>();
-        java.util.List<Item_stock> list2 = new ArrayList<>();
+        List<Item> list = new ArrayList<>();
+        List<Item_stock> list2 = new ArrayList<>();
         Connection conn = null;
         String user = "root";
         String dbPassword = "wyfnb666";

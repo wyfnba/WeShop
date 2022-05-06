@@ -16,21 +16,19 @@ import java.util.List;
 public class IncomingOrderDetailImpl implements IncomingOrderDetailDao {
 
     @Override
-    public void addOrderDetail(List<IncomingOrderdetail> incomingOrderDetail) throws SQLException {
+    public void addOrderDetail(IncomingOrderdetail incomingOrderDetail) throws SQLException {
         Connection conn = null;
         try {
             conn = ConnectionHandler.getConn();
 
             String sql = "INSERT INTO incoming_orderdetail(incoming_orderbase_id,item_id,amount) VALUES(?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            for (int i = 0 ; i < incomingOrderDetail.size() ; i++){
 
-                pstmt.setString(1,incomingOrderDetail.get(i).getIncoming_orderbase_id());
-                pstmt.setString(2,incomingOrderDetail.get(i).getItem_id());
-                pstmt.setDouble(3,incomingOrderDetail.get(i).getAmount());
+            pstmt.setString(1, incomingOrderDetail.getIncoming_orderbase_id());
+            pstmt.setString(2, incomingOrderDetail.getItem_id());
+            pstmt.setDouble(3, incomingOrderDetail.getAmount());
 
-                pstmt.executeUpdate();
-            }
+            pstmt.executeUpdate();
 
 
         } catch (SQLException e) {

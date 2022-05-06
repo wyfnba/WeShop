@@ -1,6 +1,5 @@
 package cn.edu.guet.WeShop.ui;
 
-import cn.edu.guet.WeShop.bean.IncomingOrderbase;
 import cn.edu.guet.WeShop.manager.ReplenishManager;
 import cn.edu.guet.WeShop.util.ConnectionHandler;
 
@@ -10,41 +9,43 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
 /**
  * @liwei
  */
 public class ReplenishStock extends JFrame {
-    List<String> title = new ArrayList<>();
+    String title;
     String user_id;
-    List<String> item_id = new ArrayList<>();
-    List<Double> amount = new ArrayList<>();
+    LinkedHashMap<String,String> hm = new LinkedHashMap<>();
+    List<String> item_ids = new ArrayList<>();
+    List<Double> stocks = new ArrayList<>();
+    List<Double> amounts = new ArrayList<>();
+    List<String> list1;
     double money = 0;
-    List<Double> stock = new ArrayList<>();
 
-    public ReplenishStock(String user_id) {
+    public ReplenishStock(String user_id,List<String> list) {
         this.user_id = user_id;
-        this.title.add("");
+        this.list1 = list;
         initComponents();
     }
 
-    public ReplenishStock(String title,String user_id) {
+    public ReplenishStock(String title,String user_id,List<String> list) {
         this.user_id = user_id;
-        this.title.add(title);
-        initComponents();
-    }
-
-    public ReplenishStock(String user_id,List<String> title,List<String> item_id,List<Double> amount,double money,List<Double> stock) {
         this.title = title;
-        this.item_id = item_id;
-        this.amount = amount;//把上一个进货单的数据获取下来
+        this.list1 = list;
+        initComponents();
+    }
+
+    public ReplenishStock(String user_id,LinkedHashMap<String,String> hm,List<String> item_ids,List<Double> stocks,List<Double> amounts,double money,List<String> list) {
         this.user_id = user_id;
+        this.hm = hm;
+        this.item_ids = item_ids;
+        this.stocks = stocks;
+        this.amounts = amounts;
         this.money = money;
-        this.stock = stock;
+        this.list1 = list;
         initComponents();
     }
 
@@ -75,7 +76,7 @@ public class ReplenishStock extends JFrame {
         label1.setBounds(20, 20, 55, 20);
         contentPane.add(textField1);
         textField1.setBounds(70, 20, 130, 20);
-        textField1.setText(title.get(0));
+        textField1.setText(title);
 
         //---- label2 ----
         label2.setText("进货量");
@@ -120,48 +121,53 @@ public class ReplenishStock extends JFrame {
         //---- button1 ----
         button1.setText("生成进货单");
         contentPane.add(button1);
-        button1.setBounds(50, 300, 100, 30);
+        button1.setBounds(50, 300, 120, 30);
         button1.addActionListener(
                 (e)->{
-
                     ResultSet rs1;
                     Connection conn;
                     String sql1 = "SELECT id FROM item WHERE title = ?";
-
-                    money = Double.parseDouble(textField4.getText())+money;
-                    amount.add(Double.parseDouble(textField2.getText()));//把要进货的数量添加到集合中
-
-                    if (title.size() == 1 && "".equals(title.get(0))){
-                        title.set(0,textField1.getText());
-                    }else{
-                        title.add(textField1.getText());
-                    }
+                    String item_id;
+                    double money = Double.parseDouble(textField4.getText());
+                    double amount = Double.parseDouble(textField2.getText());
                     try {
                         conn = ConnectionHandler.getConn();
                         PreparedStatement ps = conn.prepareStatement(sql1);
-                        ps.setString(1,title.get(title.size()-1));//查询的应该是最后获取到的商品名称
-                        rs1 = ps.executeQuery();
-                        ReplenishManager replenishManager = null;
 
+                        //这里的textField1.getText()不能用
+                        ps.setString(1,textField1.getText());
+                        rs1 = ps.executeQuery();
+                        ReplenishManager replenishManager = new ReplenishManager();
                         if (rs1.next()){
-                            item_id.add(rs1.getString(1));
+                            item_id = rs1.getString(1);
+                            item_ids.add(item_id);//如果商品表存在该商品，则
                             String sql2 = "SELECT stock FROM item_stock WHERE item_id = ?";
                             ps = conn.prepareStatement(sql2);
                             ps.setString(1,rs1.getString(1));
                             rs1 = ps.executeQuery();
 
-                            //如果库存表已经有该商品的记录，那就添加记录：库存记录=库存记录+进货量
-                            if (rs1.next())stock.add(Double.parseDouble(textField2.getText()));
-
-                            replenishManager = new ReplenishManager(false);//false表示商品表不用新增商品
+                            //如果库存表已经有该商品的记录
+                            if (rs1.next()){
+                                stocks.add(rs1.getDouble(1));//将商品的库存记录下来
+                                amounts.add(amount);//将进货量记录
+                            }
+                            String s = list1.get(0);
+                            list1.remove(0);
+                            hm.put(s,textField1.getText());//表示当前的商品在库存表已经存在
                         }else{
-                            String id = UUID.randomUUID().toString().replace("-", "");
-                            item_id.add(id);
-                            stock.add(Double.parseDouble(textField2.getText()));//如果还没有该商品，则进货量即为库存量
-                            replenishManager = new ReplenishManager(true, title);
-                        }
+                            item_id = UUID.randomUUID().toString().replace("-", "");
+                            item_ids.add(item_id);////如果没有该商品就生成一个商品id
+                            amounts.add(amount);//
+                            stocks.add((double) 0);//如果没有该商品，则记录该商品的库存为0
+                            title = textField1.getText();
 
-                        replenishManager.PackagingClass(money,user_id,item_id,amount,stock);
+                            String s = list1.get(0);
+                            list1.remove(0);
+                            s = s + "yes";
+                            hm.put(s,textField1.getText());//代表要将该商品添加到商品表
+                        }
+                        replenishManager.PackagingClass(money,user_id,item_ids,amounts,stocks,hm);
+                        //replenishManager.PackagingClass(money,user_id,item_id,amount,stock);
 
                     } catch (SQLException ex) {
                         ex.printStackTrace();
@@ -172,53 +178,67 @@ public class ReplenishStock extends JFrame {
                 }
         );
 
+        //button2
         button2.setText("添加进货商品");
         contentPane.add(button2);
         button2.setBounds(200, 300, 120, 30);
         button2.addActionListener(
                 (e)->{
-                    money = money+Double.parseDouble(textField4.getText());
-                    amount.add(Double.parseDouble(textField2.getText()));
-
-                    if (title.size() == 1 && "".equals(title.get(0))){
-                        title.set(0,textField1.getText());
-                    }else{
-                        title.add(textField1.getText());
-                    }
-                    //以下主要是用于添加“stock”这个集合元素的代码
                     ResultSet rs1;
                     Connection conn;
                     String sql1 = "SELECT id FROM item WHERE title = ?";
+                    String item_id;
+                    money = money + Double.parseDouble(textField4.getText());//money存的是本次进货总的花费
+                    double amount = Double.parseDouble(textField2.getText());//获取进货量
                     try {
                         conn = ConnectionHandler.getConn();
                         PreparedStatement ps = conn.prepareStatement(sql1);
-                        ps.setString(1,title.get(title.size()-1));//查询的应该是最后获取到的商品名称
+
+                        //这里的textField1.getText()不能用
+                        ps.setString(1,textField1.getText());
                         rs1 = ps.executeQuery();
+                        ReplenishManager replenishManager;
                         if (rs1.next()){
-                            item_id.add(rs1.getString(1));
+                            item_ids.add(rs1.getString(1));//如果商品表里存在该商品，则记录该商品的id
                             String sql2 = "SELECT stock FROM item_stock WHERE item_id = ?";
                             ps = conn.prepareStatement(sql2);
                             ps.setString(1,rs1.getString(1));
                             rs1 = ps.executeQuery();
-                            //如果库存表已经有该商品的记录，那就添加记录：库存记录=库存记录+进货量
-                            if (rs1.next())stock.add(Double.parseDouble(textField2.getText()));
+
+                            //如果库存表已经有该商品的记录，那就把记录替换成：库存记录=库存记录+进货量
+                            if (rs1.next()){
+                                stocks.add(rs1.getDouble(1));//记录该商品的库存值
+                                amounts.add(amount);//记录该商品的进货量
+                            }
+
+                            String s = list1.get(0);
+                            list1.remove(0);
+                            hm.put(s,textField1.getText());//表示当前的商品在库存表已经存在
                         }else{
-                            item_id.add(UUID.randomUUID().toString().replace("-", ""));
-                            stock.add(Double.parseDouble(textField2.getText()));//如果还没有该商品，则进货量即为库存量
+                            item_id = UUID.randomUUID().toString().replace("-", "");
+                            item_ids.add(item_id);//如果没有该商品就生成一个商品id
+                            amounts.add(amount);//如果还没有该商品，则进货量即为库存量
+                            stocks.add((double) 0);//不存在的商品，则其库存为0
+                            title = textField1.getText();
+
+                            String s = list1.get(0);
+                            list1.remove(0);
+                            s = s + "yes";
+                            hm.put(s,textField1.getText());//表示当前商品需要添加进商品表
                         }
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
 
-
+                    // 执行UPDATE
                     this.setVisible(false);
 
-
-                    //如果要再加进货单，则把当前的数据传递下去
-                    ReplenishStock rs = new ReplenishStock(user_id,title,item_id,amount,money,stock);
+                    ReplenishStock rs = new ReplenishStock(user_id,hm,item_ids,stocks,amounts,money,list1);
                     rs.setVisible(true);
                 }
         );
+
+
 
         {
             // compute preferred size
