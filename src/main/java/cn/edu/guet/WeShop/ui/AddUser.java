@@ -70,6 +70,10 @@ public class AddUser extends JFrame {
 
                     UserService userService=new UserServiceImpl();
                     userService.addUser(user);
+
+                    this.setVisible(false);
+                    UserControl userControl=new UserControl();
+                    userControl.setVisible(true);
                 }
         );
 

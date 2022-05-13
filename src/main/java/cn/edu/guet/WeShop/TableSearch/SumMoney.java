@@ -49,4 +49,24 @@ public class SumMoney {
         }
         return money;
     }
+
+    public Double OrderMoney(){
+        Double money=0.0;
+
+        Connection conn=null;
+        PreparedStatement ps=null;
+        ResultSet rs=null;
+        String sql="SELECT SUM(order_price) FROM orderbase";
+        try {
+            conn=ConnectionHandler.getConn();
+            ps=conn.prepareStatement(sql);
+            rs=ps.executeQuery(sql);
+            while (rs.next()){
+                money=rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return money;
+    }
 }
