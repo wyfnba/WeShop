@@ -32,6 +32,8 @@ public class OrderList extends JFrame {
         label1 = new JLabel();
         label2=new JLabel();
         label3=new JLabel();
+        label4=new JLabel();
+        label5=new JLabel();
 
         DefaultTableModel tableModel = new DefaultTableModel(getDataFromDatabase(), head) {
             public boolean isCellEditable(int row, int column) {
@@ -53,15 +55,26 @@ public class OrderList extends JFrame {
         SumMoney sumMoney=new SumMoney();
         Double IncomingMoney=sumMoney.IncomingMoney();
         Double ReturnMoney=sumMoney.ReturnMoney();
-        Double Sum=IncomingMoney-ReturnMoney;
+        Double OrderMoney=sumMoney.OrderMoney();
+        Double Sum=OrderMoney+IncomingMoney-ReturnMoney;
         label2.setText(String.valueOf(Sum));
         contentPane.add(label2);
-        label2.setBounds(600,355,100,30);
+        label2.setBounds(500,355,100,30);
 
         label3.setFont(new Font("宋体",Font.BOLD,15));
         label3.setText("总收益：");
         contentPane.add(label3);
-        label3.setBounds(500,355,70,30);
+        label3.setBounds(400,355,70,30);
+
+        label4.setFont(new Font("宋体",Font.BOLD,15));
+        label4.setText("订单收益:");
+        contentPane.add(label4);
+        label4.setBounds(650,355,70,30);
+
+        label5.setFont(new Font("宋体",Font.BOLD,15));
+        label5.setText(String.valueOf(OrderMoney));
+        contentPane.add(label5);
+        label5.setBounds(720,355,100,30);
 
         button1.setText("进货表");
         contentPane.add(button1);
@@ -192,6 +205,8 @@ public class OrderList extends JFrame {
     private JLabel label1;
     private JLabel label2;
     private JLabel label3;
+    private JLabel label4;
+    private JLabel label5;
 
     public static void main(String[] args) {
         new OrderList();

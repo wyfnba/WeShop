@@ -36,9 +36,8 @@ public class UserdaoImpl implements Userdao {
         Connection conn=null;
         try {
             conn= ConnectionHandler.getConn();
-            String sql="DELETE FROM user WHERE username=?";
+            String sql="DELETE FROM user WHERE username='"+userName+"'";
             PreparedStatement pstmt=conn.prepareStatement(sql);
-            pstmt.setString(1,userName);
 
             pstmt.executeUpdate();//真正执行sql语句
 

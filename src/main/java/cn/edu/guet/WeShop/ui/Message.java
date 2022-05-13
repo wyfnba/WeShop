@@ -25,8 +25,6 @@ public class Message extends JFrame {
         button1.addActionListener(
                 (e)->{
                     this.setVisible(false);
-                    UserControl userControl=new UserControl();
-                    userControl.setVisible(true);
                 }
         );
 

@@ -101,11 +101,10 @@ public class UserControl extends JFrame {
                 (e)->{
                     int rowNo=table1.getSelectedRow();
                     if(rowNo==-1){
-                        this.setVisible(false);
                         Message message=new Message();
                         message.setVisible(true);
                     }else{
-                        String userName=(String)table1.getValueAt(rowNo,1);
+                        String userName=(String)table1.getValueAt(rowNo,0);
                         UserServiceImpl userService=new UserServiceImpl();
                         userService.deleteUser(userName);
                     }
