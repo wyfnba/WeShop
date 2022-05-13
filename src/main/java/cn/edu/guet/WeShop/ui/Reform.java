@@ -34,12 +34,12 @@ public class Reform extends JFrame {
         //---- label1 ----
         label1.setText(text);
         contentPane.add(label1);
-        label1.setBounds(30, 95, 335, 50);
+        label1.setBounds(120, 75, 335, 50);
 
         //---- button1 ----
         button1.setText("\u786e\u5b9a");
         contentPane.add(button1);
-        button1.setBounds(new Rectangle(new Point(165, 190), button1.getPreferredSize()));
+        button1.setBounds(new Rectangle(new Point(200, 190), button1.getPreferredSize()));
         button1.addActionListener(
                 (e)->{
                     this.setVisible(false);
@@ -62,6 +62,7 @@ public class Reform extends JFrame {
         }
         pack();
         setLocationRelativeTo(getOwner());
+        this.setVisible(true);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
@@ -69,4 +70,7 @@ public class Reform extends JFrame {
     private JLabel label1;
     private JButton button1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
+    public static void main(String[] args) {
+        new Reform();
+    }
 }
