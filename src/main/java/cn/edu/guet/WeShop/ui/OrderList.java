@@ -51,12 +51,12 @@ public class OrderList extends JFrame {
         contentPane.add(label1);
         label1.setBounds(460, 0, 600, 60);
 
-        label2.setFont(new Font("宋体",Font.BOLD,15));
+        label2.setFont(new Font("宋体",Font.BOLD,15));//总收益数值显示
         SumMoney sumMoney=new SumMoney();
         Double IncomingMoney=sumMoney.IncomingMoney();
         Double ReturnMoney=sumMoney.ReturnMoney();
         Double OrderMoney=sumMoney.OrderMoney();
-        Double Sum=OrderMoney+IncomingMoney-ReturnMoney;
+        Double Sum=OrderMoney+ReturnMoney-IncomingMoney;
         label2.setText(String.valueOf(Sum));
         contentPane.add(label2);
         label2.setBounds(500,355,100,30);
@@ -71,7 +71,7 @@ public class OrderList extends JFrame {
         contentPane.add(label4);
         label4.setBounds(650,355,70,30);
 
-        label5.setFont(new Font("宋体",Font.BOLD,15));
+        label5.setFont(new Font("宋体",Font.BOLD,15));//订单收益数值显示
         label5.setText(String.valueOf(OrderMoney));
         contentPane.add(label5);
         label5.setBounds(720,355,100,30);
