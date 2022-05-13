@@ -1,19 +1,31 @@
 package cn.edu.guet.WeShop.ui;
 
 import cn.edu.guet.WeShop.bean.Item;
+import cn.edu.guet.WeShop.util.ConnectionHandler;
+import org.springframework.context.annotation.Description;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * @liwei
  */
 public class UpdateItem extends JFrame {
     Item item;
+    SellMain sellMain = new SellMain();
+    java.util.List<Item> list = new ArrayList<Item>();
+    int rowNo;
 
-    public UpdateItem(Item item) {
+    public UpdateItem(Item item,SellMain sellMain,java.util.List<Item> list,int rowNo) {
         this.item = item;
+        this.sellMain = sellMain;
+        this.list = list;
+        this.rowNo = rowNo;
         initComponents();
+
     }
 
     private void initComponents() {
@@ -96,6 +108,63 @@ public class UpdateItem extends JFrame {
         button1.addActionListener(
                 (e)->{
                     System.out.println("准备保存");
+                    Item item = new Item();
+                    item.setTitle(textField1.getText());
+                    item.setPrice(Double.parseDouble(textField2.getText()));
+                    item.setDescription(textField3.getText());
+                    item.setSales(Integer.parseInt(textField4.getText()));
+                    //System.out.println((textField3.getText()));
+                    list.set(rowNo,item);
+                    Connection conn = null;
+                    PreparedStatement stmt = null;
+                    //String user = "root";
+                    //String dbPassword = "wyfnb666";
+                    //String url = "jdbc:mysql://47.94.211.86:3306/shop?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+                    //ResultSet rs = null;
+                    try {
+                        conn = ConnectionHandler.getConn();
+
+                        String sql= "UPDATE item SET price = ?,description = ?,sales = ? WHERE title = ?";
+                        stmt =conn.prepareStatement(sql);
+                        stmt.setDouble(1,Double.parseDouble(textField2.getText()));
+                        stmt.setString(2,textField3.getText());
+                        stmt.setInt(3, Integer.parseInt(textField4.getText()));
+                        stmt.setString(4,textField1.getText());
+                        stmt.executeUpdate();
+                        //rs = stmt.executeQuery();
+
+                        //while (rs.next()) {
+                            //Item itemupdate = new Item();
+                            /*PreparedStatement pstmt = conn.prepareStatement(sql);
+                            pstmt.setString(1,textField1.getText());
+                            pstmt.setDouble(2,Double.parseDouble(textField2.getText()));
+                            pstmt.setString(3,textField3.getText());
+                            pstmt.setDouble(4,Double.parseDouble(textField4.getText()));
+                            pstmt.executeUpdate();*/
+                            //list.add(itemupdate);
+                        //}
+
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    this.setVisible(false);
+                    this.sellMain.setVisible(false);
+
+                    SellMain sel = new SellMain(list);
+                    sel.setVisible(true);
+
+
+                    //item.setPrice(textField2.getPrice());
+                    //item.setDescription(textField3.getDescription());
+                    //item.setSales(textField4.getSales());
+
+                    //UpdateItem updateItem=new UpdateItem(item);
+
+
+
+
+
+
                     // 执行UPDATE
                 }
         );
@@ -120,6 +189,8 @@ public class UpdateItem extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+
+
     private JLabel label1;
     private JTextField textField1;
     private JLabel label2;
@@ -134,3 +205,8 @@ public class UpdateItem extends JFrame {
     private JTextField textField6;
     private JButton button1;
 }
+
+
+
+
+

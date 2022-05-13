@@ -29,9 +29,9 @@ public class WXPay {
     public static void main(String[] args) throws Exception {
 
         // 生成二维码，完成支付
-        unifiedOrder();
+        //unifiedOrder();
         // 商家扫用户手机的条形码
-        //scanCodeToPay("131061753102522358");
+        scanCodeToPay("134159150641535270");
 
     }
 
@@ -55,7 +55,7 @@ public class WXPay {
         Map<String, String> map = new HashMap<>(16);
         //map.put("attach", "id,11111;price,18.00;amount,1;");
         map.put("auth_code", auth_code);
-        map.put("body", "小米手机");
+        map.put("body", "WeShop");
         map.put("device_info", "");
         map.put("nonce_str", WXPayUtil.generateNonceStr());
         map.put("out_trade_no", out_trade_no);
@@ -70,6 +70,7 @@ public class WXPay {
             Map<String, String> resp = wxpay.microPay(map);
             System.out.println("扫码支付结果：" + resp);
             mapToXml = WXPayUtil.mapToXml(resp);
+            System.out.println(mapToXml);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("微信支付失败" + e);
@@ -127,9 +128,8 @@ public class WXPay {
             }
         }
         log.error("微信支付失败！");*/
-        return "";
+        return out_trade_no;
     }
-
     /*
     下单：生成二维码
      */
@@ -186,7 +186,7 @@ public class WXPay {
 
     public static void createQRCode(Map<String, String> map) throws Exception {
 
-        File outputFile = new File("E:\\idea-projects\\WeShop\\src\\main\\resources/" + File.separator + "new.jpg");
+        File outputFile = new File("E:\\Git\\WeShop\\src\\main\\resources/" + File.separator + "new.jpg");
         FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
         String url = map.get("code_url");
         System.out.println("生成二维码的url：" + url);

@@ -79,18 +79,6 @@ public class TestController {
             // 现在创建 matcher 对象
             Matcher m = r.matcher(response);
             if (m.find()) {
-                /*
-                String itemInfo = m.group(1);
-                System.out.println(itemInfo);
-                String item[] = itemInfo.split(";");
-                String item_id = item[0].split(",")[1];
-                System.out.println(item_id);
-                String item_price = item[1].split(",")[1];
-                System.out.println(item_price);
-                String item_amount = item[2].split(",")[1];
-                System.out.println(item_amount);
-
-                 */
                 String mch_id = m.group(1);
                 System.out.println(mch_id);
                 String orderNo = m.group(2);
@@ -99,9 +87,9 @@ public class TestController {
                 String transactionId = m.group(4);
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-                Timestamp timestamp = new Timestamp(sdf.parse(orderTime).getTime());
+                //Timestamp timestamp = new Timestamp(sdf.parse(orderTime).getTime());
 
-                Orderbase orderbase=new Orderbase(Integer.parseInt(mch_id),orderNo,timestamp,transactionId,user_id,price);
+                Orderbase orderbase=new Orderbase(Integer.parseInt(mch_id),orderNo,transactionId,user_id,price);
                 System.out.println(orderbase.getId());
                 List<Orderdetail> orderdetailList= ShoppingCart.getOrderdetailList();
                 for (int i=0;i<orderdetailList.size();i++){

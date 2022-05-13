@@ -1,20 +1,27 @@
 package cn.edu.guet.WeShop.ui;
 
 import cn.edu.guet.WeShop.bean.Item;
+import cn.edu.guet.WeShop.bean.Item_stock;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * @liwei
  */
 public class SellMain extends JFrame {
-    java.util.List<Item> list = new ArrayList<Item>();
+    java.util.List<Item> itemslist = new ArrayList<Item>();
     public SellMain() {
+        initComponents();
+    }
+
+    public SellMain(java.util.List<Item> list) {
+        this.itemslist = list;
         initComponents();
     }
 
@@ -27,12 +34,13 @@ public class SellMain extends JFrame {
         button2 = new JButton();
         button3 = new JButton();
         button4 = new JButton();
+        button5 = new JButton();
         label1 = new JLabel();
         label2 = new JLabel();
         textField1 = new JTextField();
         textField2 = new JTextField("1");
 
-        DefaultTableModel tableModel = new DefaultTableModel(getDataFromDatabase(), head) {
+        DefaultTableModel tableModel = new DefaultTableModel(getDataFromDatabase(""), head) {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -58,10 +66,41 @@ public class SellMain extends JFrame {
         contentPane.add(textField2);
         textField2.setBounds(470, 355, 130, 30);
 
+        button5.setText("刷新");
+        contentPane.add(button5);
+        button5.setBounds(830, 355, 100, 30);
+        button5.addActionListener(
+                e -> {
+                    //执行并显示
+                    table1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                    table1.setModel(getDefaultTableModel());
+                }
+        );
 
         button1.setText("修改");
         contentPane.add(button1);
         button1.setBounds(300, 355, 100, 30);
+        button1.addActionListener(
+                (e)->{
+                    int rowNo = table1.getSelectedRow();
+                    String title =(String)table1.getValueAt(rowNo, 0);
+                    System.out.println(title);
+                    double price =(double)table1.getValueAt(rowNo, 1);
+                    System.out.println(price);
+                    String description =(String)table1.getValueAt(rowNo, 2);
+                    System.out.println(description);
+                    int Sales =(int)table1.getValueAt(rowNo, 3);
+                    System.out.println(Sales);
+                    Item item = new Item();
+                    item.setTitle(title);
+                    item.setPrice(price);
+                    item.setDescription(description);
+                    item.setSales((int) Sales);
+                    UpdateItem updateItem=new UpdateItem(item,this,itemslist,rowNo);
+                    //待UpdateItem执行保存时完成列表更新
+                    updateItem.setVisible(true);
+                }
+        );
 
 
         button2.setText("加入购物车");
@@ -71,7 +110,7 @@ public class SellMain extends JFrame {
                 (e) -> {
                     int rowNo = table1.getSelectedRow();//获取所选的行号
                     amount.add(textField2.getText());//将所选商品输入的数量放入数量列表
-                    listc.add(list.get(rowNo));//将所选商品信息放入购物车列表
+                    listc.add(itemslist.get(rowNo));//将所选商品信息放入购物车列表
                 }
         );
 
@@ -81,6 +120,7 @@ public class SellMain extends JFrame {
         button3.addActionListener(
                 (e)->{
                     ShoppingCart shoppingCart = new ShoppingCart(listc,amount);
+                    this.setVisible(false);
                     shoppingCart.setVisible(true);
                 }
         );
@@ -91,6 +131,21 @@ public class SellMain extends JFrame {
         button4.setText("查询");
         contentPane.add(button4);
         button4.setBounds(20, 355, 100, 30);
+        button4.addActionListener(
+                (e)->{
+                    String title = textField1.getText();
+
+                    //执行并显示
+                    DefaultTableModel tableModel1 = new DefaultTableModel(getDataFromDatabase(title), head) {
+                        public boolean isCellEditable(int row, int column) {
+                            return false;
+                        }
+                    };
+                    table1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                    table1.setModel(tableModel1);
+                }
+        );
+
 
         {
             scrollPane1.setViewportView(table1);
@@ -116,16 +171,30 @@ public class SellMain extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public Object[][] getDataFromDatabase() {
+    private DefaultTableModel getDefaultTableModel() {
+        return new DefaultTableModel(getDataFromDatabase(""), head) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    public Object[][] getDataFromDatabase(String s) {
 
         java.util.List<Item> list = new ArrayList<Item>();
+
         Connection conn = null;
+        String sql = "";
         String user = "root";
         String dbPassword = "wyfnb666";
         String url = "jdbc:mysql://47.94.211.86:3306/shop?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
 
         Statement stmt = null;
-        String sql = "SELECT * FROM item";
+        if(s == "") {
+            sql = "SELECT * FROM item";
+        }else {
+            sql = "SELECT * FROM item WHERE title='"+ s +"'";
+        }
         ResultSet rs = null;
         try {
             conn = DriverManager.getConnection(url, user, dbPassword);
@@ -135,11 +204,12 @@ public class SellMain extends JFrame {
                 Item item = new Item();
                 item.setId(rs.getString(1));
                 item.setTitle(rs.getString(2));
-                item.setPrice(rs.getFloat(3));
+                item.setPrice(rs.getDouble(3));
                 item.setDescription(rs.getString(4));
                 item.setSales(rs.getInt(5));
-                this.list.add(item);
+                list.add(item);
             }
+            itemslist=list;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
@@ -152,14 +222,15 @@ public class SellMain extends JFrame {
             }
 
         }
-        // 把集合的数据（商品信息）转换成二维数组
-        data = new Object[this.list.size()][head.length];
 
-        for (int i = 0; i < this.list.size(); i++) {
-            data[i][0] = this.list.get(i).getTitle();
-            data[i][1] = this.list.get(i).getPrice();
-            data[i][2] = this.list.get(i).getDescription();
-            data[i][3] = this.list.get(i).getSales();
+        // 把集合的数据（商品信息）转换成二维数组
+        data = new Object[list.size()][head.length];
+
+        for (int i = 0; i < list.size(); i++) {
+            data[i][0] = list.get(i).getTitle();
+            data[i][1] = list.get(i).getPrice();
+            data[i][2] = list.get(i).getDescription();
+            data[i][3] = list.get(i).getSales();
         }
         return data;
     }
@@ -172,6 +243,7 @@ public class SellMain extends JFrame {
     private JButton button2;
     private JButton button3;
     private JButton button4;
+    private JButton button5;
     private JTextField textField1;
     private JTextField textField2;
     private JLabel label1;
@@ -180,4 +252,5 @@ public class SellMain extends JFrame {
     public static void main(String[] args) {
         new SellMain();
     }
+
 }

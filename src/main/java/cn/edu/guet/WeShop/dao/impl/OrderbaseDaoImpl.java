@@ -17,15 +17,14 @@ public class OrderbaseDaoImpl implements OrderbaseDao {
         try {
             conn= ConnectionHandler.getConn();
             System.out.println("OrderbaseDaoImpl："+conn.hashCode());
-            String sql="INSERT INTO orderbase VALUES(?,?,?,?,?,?,?)";
+            String sql="INSERT INTO orderbase(id,mch_id,out_trade_no,transaction_id,user_id,order_price) VALUES(?,?,?,?,?,?)";
             PreparedStatement pstmt=conn.prepareStatement(sql);
             pstmt.setString(1,orderbase.getId());
             pstmt.setInt(2,orderbase.getMch_id());
             pstmt.setString(3,orderbase.getOut_trade_no());
-            pstmt.setTimestamp(4,orderbase.getTime_end());
-            pstmt.setString(5,orderbase.getTransaction_id());
-            pstmt.setString(6,orderbase.getUser_id());
-            pstmt.setDouble(7,orderbase.getOrder_price());
+            pstmt.setString(4,orderbase.getTransaction_id());
+            pstmt.setString(5,orderbase.getUser_id());
+            pstmt.setDouble(6,orderbase.getOrder_price());
 
             pstmt.executeUpdate();//真正执行sql语句
 
