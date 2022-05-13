@@ -69,7 +69,7 @@ public class OrderList extends JFrame {
         label4.setFont(new Font("宋体",Font.BOLD,15));
         label4.setText("订单收益:");
         contentPane.add(label4);
-        label4.setBounds(650,355,70,30);
+        label4.setBounds(650,355,100,30);
 
         label5.setFont(new Font("宋体",Font.BOLD,15));//订单收益数值显示
         label5.setText(String.valueOf(OrderMoney));
