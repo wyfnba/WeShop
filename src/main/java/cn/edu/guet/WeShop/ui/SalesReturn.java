@@ -137,10 +137,11 @@ public class SalesReturn extends JFrame {
                                 if (rs1.getDouble(1)<Double.parseDouble(textField3.getText())){
                                     //如果要退货的量大于库存的量
                                     item_ids.remove(item_ids.size()-1);
-                                    System.out.println("库存不足，无法完成退货，请重新输入");
                                     this.setVisible(false);
                                     SalesReturn sr = new SalesReturn(user_id,stocks,amounts,item_ids,money);
                                     sr.setVisible(true);
+                                    Reform reform = new Reform("库存不足，无法完成退货，请重新输入");
+                                    reform.setVisible(true);
                                     //如果走这句话，则所有的集合都
                                 }else{
                                     stocks.add(rs1.getDouble(1));
@@ -151,10 +152,11 @@ public class SalesReturn extends JFrame {
                                 }
                             }
                         }else{
-                            System.out.println("要退货的商品不存在，请重新选择");
                             this.setVisible(false);
                             SalesReturn sr = new SalesReturn(user_id,stocks,amounts,item_ids,money);
                             sr.setVisible(true);
+                            Reform reform = new Reform("要退货的商品不存在，请重新选择");
+                            reform.setVisible(true);
                         }
                     } catch (SQLException ex) {
                         ex.printStackTrace();
