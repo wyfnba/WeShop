@@ -1,20 +1,30 @@
 package cn.edu.guet.WeShop.ui;
 
 import cn.edu.guet.WeShop.bean.Item;
+import cn.edu.guet.WeShop.bean.Orderbase;
 import cn.edu.guet.WeShop.bean.Orderdetail;
 import cn.edu.guet.WeShop.pay.WXPay;
+import cn.edu.guet.WeShop.service.OrderService;
+import cn.edu.guet.WeShop.service.impl.OrderServiceImpl;
+import cn.edu.guet.WeShop.util.ConnectionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import static cn.edu.guet.WeShop.ui.Login.user_id;
 
 
 /**
  * @liwei
  */
 public class ShoppingCart extends JFrame {
+    String orderNo;
     java.util.List<Item> list;
     java.util.List<String> amount;
     public static List<Orderdetail> orderdetailList=new ArrayList<>();
@@ -33,6 +43,7 @@ public class ShoppingCart extends JFrame {
     }
 
     public ShoppingCart(java.util.List<Item> list, java.util.List<String> amount) {
+        orderdetailList.clear();
         this.list = list;
         this.amount = amount;
         initComponents();
@@ -45,6 +56,9 @@ public class ShoppingCart extends JFrame {
         button2 = new JButton();
         button3 = new JButton();
         button4 = new JButton();
+        button5 = new JButton();
+        button6 = new JButton();
+
         label1 = new JLabel();
         textField1 = new JTextField();
         textField2 = new JTextField();
@@ -78,23 +92,46 @@ public class ShoppingCart extends JFrame {
                 e -> {
                     try {
                         for (int i=0;i<list.size();i++){
-                            Orderdetail orderdetail=new Orderdetail("","",list.get(i).getId(),Double.parseDouble(amount.get(i)));
+                            Orderdetail orderdetail=new Orderdetail("","",list.get(i).getId(),Integer.parseInt(amount.get(i)));
                             orderdetailList.add(orderdetail);
                             price=price+list.get(i).getPrice()*Double.parseDouble(amount.get(i));
                         }
-                        //WXPay.scanCodeToPay(textField2.getText());
+                        orderNo=WXPay.scanCodeToPay(textField2.getText());
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }
         );
 
+        button6.setText("生成订单");
+        contentPane.add(button6);
+        button6.setBounds(610, 355, 100, 30);
+        button6.addActionListener(
+                e -> {
+                    String transactionId= UUID.randomUUID().toString().replace("-", "");
+                    Orderbase orderbase=new Orderbase(1623889015,orderNo,transactionId,user_id,price);
+                    for (int i=0;i<orderdetailList.size();i++){
+                        orderdetailList.get(i).setOrderbase_id(orderbase.getId());
+                    }
+                    OrderService orderService=new OrderServiceImpl();
+                    try {
+                        orderService.addOrder(orderbase,orderdetailList);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+        );
 
         button2.setText("二维码支付");
         contentPane.add(button2);
-        button2.setBounds(610, 355, 100, 30);
+        button2.setBounds(490, 355, 100, 30);
         button2.addActionListener(
                 e -> {
+                    for (int i=0;i<list.size();i++){
+                        Orderdetail orderdetail=new Orderdetail("","",list.get(i).getId(),Integer.parseInt(amount.get(i)));
+                        orderdetailList.add(orderdetail);
+                        price=price+list.get(i).getPrice()*Double.parseDouble(amount.get(i));
+                    }
                     WXPay.unifiedOrder();
                     Pay pay = new Pay();
                     pay.setVisible(true);
@@ -104,9 +141,47 @@ public class ShoppingCart extends JFrame {
         contentPane.add(textField1);
         textField1.setBounds(270, 355, 130, 30);
 
+        button5.setText("返回");
+        contentPane.add(button5);
+        button5.setBounds(30, 355, 100, 30);
+        button5.addActionListener(
+                e -> {
+                    this.setVisible(false);
+                    SellMain sellMain=new SellMain();
+                    sellMain.setVisible(true);
+                }
+        );
+
         button4.setText("修改数量");
         contentPane.add(button4);
         button4.setBounds(150, 355, 100, 30);
+        button4.addActionListener(
+                (e)->{
+                    int rowNo = table1.getSelectedRow();
+                    Item item = new Item();
+                    double amo = Double.parseDouble(amount.get(rowNo));
+                    System.out.println(amo);//得到amount表里的数量
+                    double amountchange = Double.parseDouble(textField1.getText());
+                    System.out.println(amountchange);//得到输入框里的数量
+                    amount.set(rowNo,(textField1.getText()));
+                    System.out.println(amo);//修改amount表里的数量
+                    //
+                    String text = "0";
+                    for (int i = 0; i < amount.size(); i++) {
+                        if (amount.get(i) ==text) {
+                            amount.remove(i);
+                            list.remove(i);
+                            System.out.println(amount.get(i));
+                            System.out.println(list.get(i));
+                        }
+                    }
+                    //删除操作
+                    amount.set(rowNo, String.valueOf(amountchange));
+                    ShoppingCart shoppingCart = new ShoppingCart(list,amount);
+                    this.setVisible(false);
+                    shoppingCart.setVisible(true);
+                }
+        );
 
         {
             scrollPane1.setViewportView(table1);
@@ -158,6 +233,8 @@ public class ShoppingCart extends JFrame {
     private JButton button2;
     private JButton button3;
     private JButton button4;
+    private JButton button5;
+    private JButton button6;
     private JTextField textField1;
     private JTextField textField2;
     private JLabel label1;

@@ -33,7 +33,7 @@ public class Pay extends JFrame {
         //======== this ========
         JPanel contentPane = (JPanel) getContentPane();
         contentPane.setLayout(null);
-        ImageIcon imageIconSource = new ImageIcon("E:\\idea-projects\\WeShop\\src\\main\\resources\\new.jpg");
+        ImageIcon imageIconSource = new ImageIcon("E:\\Git\\WeShop\\src\\main\\resources\\new.jpg");
         Image image = imageIconSource.getImage();
         Image tempImage = image.getScaledInstance(200,200,Image.SCALE_DEFAULT);
         ImageIcon imageIcon = new ImageIcon(tempImage);
