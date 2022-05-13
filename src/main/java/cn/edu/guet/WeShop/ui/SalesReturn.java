@@ -1,27 +1,48 @@
 package cn.edu.guet.WeShop.ui;
 
+import cn.edu.guet.WeShop.manager.ReturnsManager;
+import cn.edu.guet.WeShop.util.ConnectionHandler;
+
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @liwei
  */
 public class SalesReturn extends JFrame {
-    //Item item;
     String title;
-    int stock;
+    String user_id;
+    List<Double> stocks = new ArrayList<>();
+    List<Double> amounts = new ArrayList<>();
+    List<String> item_ids = new ArrayList<>();
+    double money = 0;//money记录的是本次退货总共得到的钱
 
-    public SalesReturn() {
-        //this.item = item;
+    public SalesReturn(String user_id) {
+        this.user_id = user_id;
         initComponents();
     }
 
-    public SalesReturn(String title, int stock) {
-        //this.item = item;
+    public SalesReturn(String user_id,String title) {
+        this.user_id = user_id;
         this.title = title;
-        this.stock = stock;
         initComponents();
     }
+
+    public SalesReturn(String user_id,List<Double> stocks,List<Double> amounts,List<String> item_ids,double money) {
+        this.user_id = user_id;
+        this.stocks = stocks;
+        this.amounts = amounts;
+        this.item_ids = item_ids;
+        this.money = money;
+        initComponents();
+    }
+
 
     private void initComponents() {
         label1 = new JLabel();
@@ -37,6 +58,7 @@ public class SalesReturn extends JFrame {
         label6 = new JLabel();
         textField6 = new JTextField();
         button1 = new JButton();
+        button2 = new JButton();
 
         //======== this ========
         JPanel contentPane = (JPanel) getContentPane();
@@ -93,14 +115,99 @@ public class SalesReturn extends JFrame {
         //---- button1 ----
         button1.setText("生成退货单");
         contentPane.add(button1);
-        button1.setBounds(200, 300, 100, 30);
+        button1.setBounds(50, 300, 120, 30);
         button1.addActionListener(
                 (e)->{
-                    System.out.println("准备保存");
-                    // 执行UPDATE
-                    this.setVisible(false);
+                    String sql1 = "SELECT id FROM item WHERE title = ?";
+                    ResultSet rs1;
+                    Connection conn;
+                    try {
+                        conn = ConnectionHandler.getConn();
+                        PreparedStatement ps = conn.prepareStatement(sql1);
+                        ps.setString(1,textField1.getText());
+                        rs1 = ps.executeQuery();
+                        ReturnsManager rm = new ReturnsManager(user_id);
+                        if (rs1.next()){
+                            item_ids.add(rs1.getString(1));
+                            String sql2 = "SELECT stock FROM item_stock WHERE item_id = ?";
+                            ps = conn.prepareStatement(sql2);
+                            ps.setString(1,rs1.getString(1));
+                            rs1 = ps.executeQuery();
+                            if (rs1.next()){
+                                if (rs1.getDouble(1)<Double.parseDouble(textField3.getText())){
+                                    //如果要退货的量大于库存的量
+                                    item_ids.remove(item_ids.size()-1);
+                                    System.out.println("库存不足，无法完成退货，请重新输入");
+                                    this.setVisible(false);
+                                    SalesReturn sr = new SalesReturn(user_id,stocks,amounts,item_ids,money);
+                                    sr.setVisible(true);
+                                    //如果走这句话，则所有的集合都
+                                }else{
+                                    stocks.add(rs1.getDouble(1));
+                                    amounts.add(Double.valueOf(textField3.getText()));
+                                    money = money + Double.parseDouble(textField4.getText());
+                                    this.setVisible(false);
+                                    rm.PackingClass(item_ids,stocks,amounts,money);
+                                }
+                            }
+                        }else{
+                            System.out.println("要退货的商品不存在，请重新选择");
+                            this.setVisible(false);
+                            SalesReturn sr = new SalesReturn(user_id,stocks,amounts,item_ids,money);
+                            sr.setVisible(true);
+                        }
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+
                 }
         );
+
+        //---- button2 ----
+        button2.setText("添加退货商品");
+        contentPane.add(button2);
+        button2.setBounds(200, 300, 120, 30);
+        button2.addActionListener(
+                (e)->{
+                    String sql1 = "SELECT id FROM item WHERE title = ?";
+                    ResultSet rs1;
+                    Connection conn;
+                    try {
+                        conn = ConnectionHandler.getConn();
+                        PreparedStatement ps = conn.prepareStatement(sql1);
+                        ps.setString(1,textField1.getText());
+                        rs1 = ps.executeQuery();
+                        if (rs1.next()){
+                            item_ids.add(rs1.getString(1));
+                            String sql2 = "SELECT stock FROM item_stock WHERE item_id = ?";
+                            ps = conn.prepareStatement(sql2);
+                            ps.setString(1,rs1.getString(1));
+                            rs1 = ps.executeQuery();
+                            if (rs1.next()){
+                                if (rs1.getDouble(1)<Double.parseDouble(textField3.getText())){
+                                    //如果要退货的量大于库存的量
+                                    item_ids.remove(item_ids.size()-1);
+                                    System.out.println("库存不足，无法完成退货，请重新输入");
+                                    //如果走这句话，则所有的集合都
+                                }else{
+                                    stocks.add(rs1.getDouble(1));
+                                    amounts.add(Double.valueOf(textField3.getText()));
+                                    money = money + Double.parseDouble(textField4.getText());
+                                }
+                            }
+                        }else{
+                            System.out.println("要退货的商品不存在，请重新选择");
+                        }
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    this.setVisible(false);
+                    SalesReturn sr = new SalesReturn(user_id,stocks,amounts,item_ids,money);
+                    sr.setVisible(true);
+                }
+        );
+
+
 
         {
             // compute preferred size
@@ -135,4 +242,5 @@ public class SalesReturn extends JFrame {
     private JLabel label6;
     private JTextField textField6;
     private JButton button1;
+    private JButton button2;
 }

@@ -45,7 +45,7 @@ public class BuyerInterface extends JFrame {
         contentPane.add(label1);
         label1.setBounds(460, 0, 600, 60);
 
-        /*button1.setText("退货");
+        button1.setText("退货");
         contentPane.add(button1);
         button1.setBounds(510, 355, 100, 30);
         button1.addActionListener(
@@ -53,15 +53,14 @@ public class BuyerInterface extends JFrame {
                     int rowNo = table1.getSelectedRow();//获取所选的行号
                     if (rowNo != -1){
                         String title = (String) table1.getValueAt(rowNo,0);
-                        int stock = (int) table1.getValueAt(rowNo,1);
-                        SalesReturn sr = new SalesReturn(title,stock);
+                        SalesReturn sr = new SalesReturn(user_id,title);
                         sr.setVisible(true);
                     }else{
-                        SalesReturn sr = new SalesReturn();
+                        SalesReturn sr = new SalesReturn(user_id);
                         sr.setVisible(true);
                     }
                 }
-        );*/
+        );
 
         button2.setText("进货");
         contentPane.add(button2);

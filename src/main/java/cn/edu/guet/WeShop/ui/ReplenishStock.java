@@ -167,7 +167,6 @@ public class ReplenishStock extends JFrame {
                             hm.put(s,textField1.getText());//代表要将该商品添加到商品表
                         }
                         replenishManager.PackagingClass(money,user_id,item_ids,amounts,stocks,hm);
-                        //replenishManager.PackagingClass(money,user_id,item_id,amount,stock);
 
                     } catch (SQLException ex) {
                         ex.printStackTrace();

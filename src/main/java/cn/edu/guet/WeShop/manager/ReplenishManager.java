@@ -16,7 +16,6 @@ import java.util.*;
  */
 public class ReplenishManager {
     boolean flag;
-    String title;
     List<String> list = new ArrayList<>();
 
     public ReplenishManager(){
@@ -26,12 +25,6 @@ public class ReplenishManager {
     public ReplenishManager(boolean flag){
         this.flag = flag;
     }
-
-    public ReplenishManager(boolean flag,String title){
-        this.title = title;
-        this.flag = flag;
-    }
-
 
     public void PackagingClass(double money, String user_id, List<String> item_ids, List<Double> amounts, List<Double> stocks, LinkedHashMap<String,String> hm){
         randomNumber();
