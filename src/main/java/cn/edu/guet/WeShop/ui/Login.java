@@ -21,7 +21,8 @@ public class Login extends JFrame {
         label1 = new JLabel();
         textField1 = new JTextField("陶泽康");
         label2 = new JLabel();
-        textField2 = new JTextField("tzk");
+//        textField2 = new JTextField("tzk");
+        passwordField =new JPasswordField();
         button1 = new JButton();
 
         //======== this ========
@@ -39,8 +40,10 @@ public class Login extends JFrame {
         label2.setText("\u5bc6\u7801\uff1a");
         contentPane.add(label2);
         label2.setBounds(new Rectangle(new Point(120, 125), label2.getPreferredSize()));
-        contentPane.add(textField2);
-        textField2.setBounds(185, 120, 100, textField2.getPreferredSize().height);
+        contentPane.add(passwordField);
+//        textField2.setBounds(185, 120, 100, textField2.getPreferredSize().height);
+        passwordField.setBounds(185, 120, 100, passwordField.getPreferredSize().height);
+        passwordField.setEchoChar('*');
 
         //---- button1 ----
         button1.addActionListener(
@@ -53,7 +56,7 @@ public class Login extends JFrame {
                     INSERT INTO sys_user (id,name,password) VALUES(1111,'guet','guet1234');
                      */
                     String username = textField1.getText();
-                    String password = textField2.getText();
+                    String password = passwordField.getText();
 
                     String user = "root";
                     String dbPassword = "wyfnb666";
@@ -111,7 +114,8 @@ public class Login extends JFrame {
     private JLabel label1;
     private JTextField textField1;
     private JLabel label2;
-    private JTextField textField2;
+//    private JTextField textField2;
+    private JPasswordField passwordField;
     private JButton button1;
 
 
