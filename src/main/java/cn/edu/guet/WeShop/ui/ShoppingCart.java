@@ -57,7 +57,6 @@ public class ShoppingCart extends JFrame {
         button3 = new JButton();
         button4 = new JButton();
         button5 = new JButton();
-        button6 = new JButton();
 
         label1 = new JLabel();
         textField1 = new JTextField();
@@ -98,25 +97,6 @@ public class ShoppingCart extends JFrame {
                         }
                         orderNo=WXPay.scanCodeToPay(textField2.getText());
                     } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-        );
-
-        button6.setText("生成订单");
-        contentPane.add(button6);
-        button6.setBounds(610, 355, 100, 30);
-        button6.addActionListener(
-                e -> {
-                    String transactionId= UUID.randomUUID().toString().replace("-", "");
-                    Orderbase orderbase=new Orderbase(1623889015,orderNo,transactionId,user_id,price);
-                    for (int i=0;i<orderdetailList.size();i++){
-                        orderdetailList.get(i).setOrderbase_id(orderbase.getId());
-                    }
-                    OrderService orderService=new OrderServiceImpl();
-                    try {
-                        orderService.addOrder(orderbase,orderdetailList);
-                    } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -234,7 +214,6 @@ public class ShoppingCart extends JFrame {
     private JButton button3;
     private JButton button4;
     private JButton button5;
-    private JButton button6;
     private JTextField textField1;
     private JTextField textField2;
     private JLabel label1;

@@ -1,7 +1,11 @@
 package cn.edu.guet.WeShop.pay;
 
+import cn.edu.guet.WeShop.bean.Orderbase;
 import cn.edu.guet.WeShop.bean.Orderdetail;
 import cn.edu.guet.WeShop.sdk.WXPayUtil;
+import cn.edu.guet.WeShop.service.OrderService;
+import cn.edu.guet.WeShop.service.impl.OrderServiceImpl;
+import cn.edu.guet.WeShop.ui.ShoppingCart;
 import cn.edu.guet.WeShop.util.DateUtil;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -11,12 +15,19 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.SQLException;
 import java.util.*;
+
+import static cn.edu.guet.WeShop.ui.Login.user_id;
+import static cn.edu.guet.WeShop.ui.ShoppingCart.price;
 
 public class WXPay {
     static String money;
@@ -56,7 +67,7 @@ public class WXPay {
         //map.put("attach", "id,11111;price,18.00;amount,1;");
         map.put("auth_code", auth_code);
         map.put("body", "WeShop");
-        map.put("device_info", "");
+        map.put("device_info", "WeShop");
         map.put("nonce_str", WXPayUtil.generateNonceStr());
         map.put("out_trade_no", out_trade_no);
         map.put("spbill_create_ip", spbill_create_ip);
@@ -76,7 +87,7 @@ public class WXPay {
             log.error("微信支付失败" + e);
         }
         //判断支付是否成功
-        /*String return_code = null;
+        String return_code = null;
         String result_code = null;
         String err_code_des = null;
         String err_code = null;
@@ -96,8 +107,8 @@ public class WXPay {
             } else if (element.getName().equals("err_code")) {
                 err_code = element.getTextTrim();
             }
-        }*/
-        /*if (PAY_SUCCESS.equals(return_code) && PAY_SUCCESS.equals(result_code)) {
+        }
+        if (PAY_SUCCESS.equals(return_code) && PAY_SUCCESS.equals(result_code)) {
             log.info("微信免密支付成功！");
             return PAY_SUCCESS;
         } else if (PAY_USERPAYING.equals(err_code)) {
@@ -122,13 +133,25 @@ public class WXPay {
                 }
                 if (PAY_SUCCESS.equals(trade_state)) {
                     log.info("微信加密支付成功！");
+                    String transactionId= UUID.randomUUID().toString().replace("-", "");
+                    Orderbase orderbase=new Orderbase(1623889015,out_trade_no,transactionId,user_id,price);
+                    List<Orderdetail> orderdetailList= ShoppingCart.getOrderdetailList();
+                    for (int j=0;j<orderdetailList.size();j++){
+                        orderdetailList.get(j).setOrderbase_id(orderbase.getId());
+                    }
+                    OrderService orderService=new OrderServiceImpl();
+                    try {
+                        orderService.addOrder(orderbase,orderdetailList);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
                     return PAY_SUCCESS;
                 }
                 log.info("正在支付" + orderResp);
             }
         }
-        log.error("微信支付失败！");*/
-        return out_trade_no;
+        log.error("微信支付失败！");
+        return "";
     }
     /*
     下单：生成二维码
